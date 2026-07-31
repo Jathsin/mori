@@ -1,6 +1,6 @@
-# Memore web
+# Mori web
 
-Static iPhone-first version of the native Memore app. Go and templ generate the
+Static iPhone-first version of the native Mori app. Go and templ generate the
 finished site; GitHub Pages serves only the files in `dist`.
 
 ## Build

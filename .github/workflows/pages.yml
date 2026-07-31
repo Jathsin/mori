@@ -1,4 +1,4 @@
-name: Deploy Memore to GitHub Pages
+name: Deploy Mori to GitHub Pages
 
 on:
   push:

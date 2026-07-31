@@ -13,7 +13,7 @@ func main() {
 		files.ServeHTTP(w, r)
 	})
 
-	log.Println("Memore is running at http://localhost:8080")
+	log.Println("Mori is running at http://localhost:8080")
 	if err := http.ListenAndServe(":8080", handler); err != nil {
 		log.Fatal(err)
 	}

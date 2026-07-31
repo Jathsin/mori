@@ -49,7 +49,7 @@ func main() {
 		}
 	}
 
-	fmt.Println("Memore exported to web/dist")
+	fmt.Println("Mori exported to web/dist")
 }
 
 func copyFile(source, destination string) error {

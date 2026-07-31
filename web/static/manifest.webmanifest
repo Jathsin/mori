@@ -1,6 +1,6 @@
 {
-  "name": "Memore",
-  "short_name": "Memore",
+  "name": "Mori",
+  "short_name": "Mori",
   "description": "Un calendario de nuestras vidas.",
   "start_url": "../",
   "display": "standalone",
