@@ -33,6 +33,13 @@
   background: var(--paper);
 }
 
+html[data-theme="dark"] {
+  --paper: #1d1c1a;
+  --ink: #ece9e4;
+  --together: #dedbd5;
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -85,7 +92,7 @@ body {
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   padding-bottom: 14px;
 }
@@ -133,9 +140,48 @@ h1 {
   font-weight: 450;
   line-height: 1;
   letter-spacing: 0.25px;
-  text-align: right;
+  text-align: left;
   white-space: nowrap;
 }
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid rgb(26 23 19 / 20%);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+}
+
+.theme-toggle svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.theme-sun { display: none; }
+html[data-theme="dark"] .theme-moon { display: none; }
+html[data-theme="dark"] .theme-sun { display: block; }
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] .year-heading,
+html[data-theme="dark"] .week-heading,
+html[data-theme="dark"] .week-number,
+html[data-theme="dark"] .year-number,
+html[data-theme="dark"] .counter small,
+html[data-theme="dark"] .counter > span,
+html[data-theme="dark"] .season-index h2,
+html[data-theme="dark"] .season-title,
+html[data-theme="dark"] .scroll-cue,
+html[data-theme="dark"] .moment-note { color: rgb(236 233 228 / 62%); }
+html[data-theme="dark"] .week:not(.completed) { background: var(--paper); box-shadow: 0 0 0 0.45px rgb(236 233 228 / 24%); }
+html[data-theme="dark"] .week-marks i,
+html[data-theme="dark"] .year-marks i { background: rgb(236 233 228 / 30%); }
+html[data-theme="dark"] .moment-dialog { background: #262522; color: var(--ink); box-shadow: 0 18px 60px rgb(0 0 0 / 45%); }
+html[data-theme="dark"] .moment-dialog input { color: var(--ink); border-bottom-color: rgb(236 233 228 / 28%); }
+html[data-theme="dark"] .moment-dialog label,
+html[data-theme="dark"] .detail-dialog time,
+html[data-theme="dark"] .detail-dialog p { color: rgb(236 233 228 / 65%); }
 
 .calendar-map {
   position: relative;
@@ -744,6 +790,16 @@ h1 {
   font-family: "Crimson Text", Georgia, serif;
   font-size: 15px;
   line-height: 1.45;
+}
+
+.delete-moment {
+  align-self: flex-start;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(155 61 55 / 10%);
+  color: #9b3d37;
+  font: 550 9px/1 "Inter", sans-serif;
 }
 
 .counter div {

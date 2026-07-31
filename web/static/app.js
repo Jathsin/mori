@@ -38,6 +38,7 @@
   const portraitImageInput = document.querySelector("#portrait-image");
   const seasonList = document.querySelector("#season-list");
   let detailImageURL;
+  let detailMomentId;
   const portraitImageURLs = new Map();
   let expandedSeasonId;
   let pendingSeasonColor;
@@ -367,6 +368,17 @@
     return image;
   }
 
+  async function deleteImage(id) {
+    const database = await openMediaDatabase();
+    await new Promise((resolve, reject) => {
+      const transaction = database.transaction("images", "readwrite");
+      transaction.objectStore("images").delete(id);
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(transaction.error);
+    });
+    database.close();
+  }
+
   async function loadPortraits() {
     const settings = readPortraitSettings();
     await Promise.all(["january", "may"].map(async (key) => {
@@ -555,6 +567,7 @@
   async function showMoment(momentId) {
     const moment = readMoments().find((value) => value.id === momentId);
     if (!moment) return;
+    detailMomentId = momentId;
 
     detailDate.textContent = moment.date;
     detailDescription.textContent = moment.description;
@@ -705,6 +718,24 @@
   document.querySelector("#close-season-dialog").addEventListener("click", () => seasonDialog.close());
   document.querySelector("#close-portrait-dialog").addEventListener("click", () => portraitDialog.close());
   document.querySelector("#close-detail").addEventListener("click", () => detailDialog.close());
+  document.querySelector("#theme-toggle").addEventListener("click", () => {
+    const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("memore-theme", theme);
+    window.requestAnimationFrame(drawLifeLines);
+  });
+  document.querySelector("#delete-moment").addEventListener("click", async () => {
+    if (!detailMomentId) return;
+    const moments = readMoments().filter((moment) => moment.id !== detailMomentId);
+    localStorage.setItem(storageKey, JSON.stringify(moments));
+    try { await deleteImage(detailMomentId); } catch { /* The note can still be deleted. */ }
+    detailMomentId = undefined;
+    detailDialog.close();
+    renderMoments();
+    queueCloudSave();
+    note.textContent = "Momento eliminado";
+    note.hidden = false;
+  });
 
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) dialog.close();
