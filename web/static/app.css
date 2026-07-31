@@ -553,6 +553,17 @@ h1 {
   text-align: left;
 }
 
+.cloud-dialog p {
+  margin: 0 0 8px;
+  color: rgb(26 23 19 / 56%);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.cloud-dialog .cloud-error {
+  color: #9b3d37;
+}
+
 .season-index {
   width: min(100%, 360px);
   margin-top: clamp(76px, 12dvh, 112px);

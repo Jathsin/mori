@@ -5,6 +5,8 @@
   const storageKey = "memore-moments-v1";
   const seasonStorageKey = "memore-seasons-v1";
   const portraitStorageKey = "memore-portraits-v1";
+  const supabaseURL = "https://rdetnbshddywjymtidaw.supabase.co";
+  const supabaseKey = "sb_publishable_gU1l6K8OHMtblrgqfXIlMg_UMjEDRpF";
   const seasonColors = [
     "#a9473f", "#d89aa3", "#c87847", "#b84e68", "#e0a078", "#8f4656",
     "#d97964", "#ad6d78", "#df8b58", "#c65378", "#b86b4f", "#e2afb0",
@@ -39,12 +41,89 @@
   const portraitImageURLs = new Map();
   let expandedSeasonId;
   let pendingSeasonColor;
+  let cloudUser;
+  let cloudSaveTimer;
+  let applyingCloudState = false;
+  const cloudClient = globalThis.supabase?.createClient(supabaseURL, supabaseKey);
   const fields = {
     days: document.querySelector("#days"),
     hours: document.querySelector("#hours"),
     minutes: document.querySelector("#minutes"),
     seconds: document.querySelector("#seconds"),
   };
+
+  function localState() {
+    return {
+      moments: readMoments(),
+      seasons: readSeasons(),
+      portraits: readPortraitSettings(),
+    };
+  }
+
+  function applyCloudState(data) {
+    if (!data) return;
+    applyingCloudState = true;
+    if (Array.isArray(data.moments)) localStorage.setItem(storageKey, JSON.stringify(data.moments));
+    if (Array.isArray(data.seasons)) localStorage.setItem(seasonStorageKey, JSON.stringify(data.seasons));
+    if (data.portraits) localStorage.setItem(portraitStorageKey, JSON.stringify(data.portraits));
+    renderSeasons();
+    renderMoments();
+    loadPortraits();
+    applyingCloudState = false;
+  }
+
+  async function saveCloudState() {
+    if (!cloudClient || !cloudUser || applyingCloudState) return;
+    await cloudClient.from("memore_state").upsert({
+      user_id: cloudUser.id,
+      data: localState(),
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  function queueCloudSave() {
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = setTimeout(saveCloudState, 300);
+  }
+
+  async function startCloud(session) {
+    cloudUser = session.user;
+    const { data, error } = await cloudClient.from("memore_state").select("data").eq("user_id", cloudUser.id).maybeSingle();
+    if (!error && data?.data) applyCloudState(data.data);
+    else if (!error) await saveCloudState();
+    cloudClient.channel(`memore-${cloudUser.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "memore_state", filter: `user_id=eq.${cloudUser.id}` },
+        (change) => applyCloudState(change.new?.data))
+      .subscribe();
+  }
+
+  async function initializeCloud() {
+    if (!cloudClient) return;
+    const cloudDialog = document.querySelector("#cloud-dialog");
+    const cloudForm = document.querySelector("#cloud-form");
+    const cloudError = document.querySelector("#cloud-error");
+    const { data } = await cloudClient.auth.getSession();
+    if (data.session) {
+      await startCloud(data.session);
+      return;
+    }
+    cloudDialog.showModal();
+    cloudForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      cloudError.hidden = true;
+      const { data: login, error } = await cloudClient.auth.signInWithPassword({
+        email: document.querySelector("#cloud-email").value.trim(),
+        password: document.querySelector("#cloud-password").value,
+      });
+      if (error) {
+        cloudError.textContent = "No se pudo iniciar sesión. Revisa el correo y la contraseña.";
+        cloudError.hidden = false;
+        return;
+      }
+      cloudDialog.close();
+      await startCloud(login.session);
+    });
+  }
 
   function updateCounter() {
     const elapsed = Math.max(0, Math.floor((Date.now() - meeting.getTime()) / 1000));
@@ -144,7 +223,10 @@
   }
 
   document.querySelectorAll(".written-date").forEach((input) => {
-    input.addEventListener("input", () => input.setCustomValidity(""));
+    const clearDateError = () => input.setCustomValidity("");
+    input.addEventListener("input", clearDateError);
+    input.addEventListener("change", clearDateError);
+    input.addEventListener("focus", clearDateError);
     input.addEventListener("blur", () => {
       const date = parseWrittenDate(input);
       if (date) input.value = formatWrittenDate(date);
@@ -430,6 +512,7 @@
       event.stopPropagation();
       const seasons = readSeasons().filter((season) => season.id !== seasonId);
       localStorage.setItem(seasonStorageKey, JSON.stringify(seasons));
+      queueCloudSave();
       renderSeasons();
       renderMoments();
       note.textContent = "Temporada eliminada";
@@ -600,6 +683,8 @@
 
   document.querySelector("#add-season").addEventListener("click", () => {
     const today = todayString();
+    seasonStartInput.setCustomValidity("");
+    seasonEndInput.setCustomValidity("");
     seasonStartInput.value = formatWrittenDate(today);
     seasonEndInput.value = formatWrittenDate(today);
     seasonLabelInput.value = "";
@@ -659,6 +744,7 @@
     const moments = readMoments();
     moments.push({ id, date, description, hasImage });
     localStorage.setItem(storageKey, JSON.stringify(moments));
+    queueCloudSave();
     renderMoments();
     dialog.close();
 
@@ -668,14 +754,25 @@
 
   seasonForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    seasonStartInput.setCustomValidity("");
+    seasonEndInput.setCustomValidity("");
     const start = requireWrittenDate(seasonStartInput);
+    if (!start) return;
     const end = requireWrittenDate(seasonEndInput);
+    if (!end) return;
     const label = seasonLabelInput.value.trim();
-    if (!start || !end || !label || start > end || end > todayString()) {
-      if (start && end && start > end) {
-        seasonEndInput.setCustomValidity("La fecha final debe ser posterior a la inicial");
-        seasonEndInput.reportValidity();
-      }
+    if (Date.parse(`${start}T00:00:00Z`) > Date.parse(`${end}T00:00:00Z`)) {
+      seasonEndInput.setCustomValidity("La fecha final debe ser posterior a la inicial");
+      seasonEndInput.reportValidity();
+      return;
+    }
+    if (Date.parse(`${end}T00:00:00Z`) > Date.parse(`${todayString()}T00:00:00Z`)) {
+      seasonEndInput.setCustomValidity("La fecha final no puede estar en el futuro");
+      seasonEndInput.reportValidity();
+      return;
+    }
+    if (!label) {
+      seasonLabelInput.focus();
       return;
     }
 
@@ -689,6 +786,7 @@
     });
     pendingSeasonColor = undefined;
     localStorage.setItem(seasonStorageKey, JSON.stringify(seasons));
+    queueCloudSave();
     renderSeasons();
     renderMoments();
     seasonDialog.close();
@@ -707,6 +805,7 @@
     const settings = readPortraitSettings();
     settings[key] = { date };
     localStorage.setItem(portraitStorageKey, JSON.stringify(settings));
+    queueCloudSave();
     portraitDialog.close();
     await loadPortraits();
   });
@@ -715,6 +814,7 @@
   renderSeasons();
   renderMoments();
   loadPortraits();
+  initializeCloud();
   updateCounter();
   window.requestAnimationFrame(drawLifeLines);
   setInterval(updateCounter, 1000);

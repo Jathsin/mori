@@ -63,7 +63,7 @@ func Page() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\"><meta name=\"theme-color\" content=\"#f5f5f5\"><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\"><meta name=\"apple-mobile-web-app-title\" content=\"Memore\"><meta name=\"description\" content=\"Un calendario de nuestras vidas.\"><title>Memore</title><link rel=\"icon\" href=\"./assets/icon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./assets/icon.png\"><link rel=\"manifest\" href=\"./assets/manifest.webmanifest\"><link rel=\"stylesheet\" href=\"./assets/app.css?v=8\"><script src=\"./assets/htmx.min.js\" defer></script><script src=\"./assets/app.js?v=8\" defer></script></head><body hx-boost=\"true\"><main class=\"memore\" aria-label=\"Calendario de vida de Gael y Juanmi\"><canvas id=\"life-lines\" aria-hidden=\"true\"></canvas><header class=\"header\"><div class=\"portraits\" aria-label=\"Gael y Juanmi\"><button class=\"portrait-button\" type=\"button\" data-portrait=\"january\" aria-label=\"Editar primer retrato\"><img id=\"portrait-january\" data-birth-date=\"2005-01-15\" src=\"./assets/juanmi.png\" alt=\"Retrato asociado al 15 de enero de 2005\"></button> <button class=\"portrait-button\" type=\"button\" data-portrait=\"may\" aria-label=\"Editar segundo retrato\"><img id=\"portrait-may\" data-birth-date=\"2005-05-26\" src=\"./assets/gael.jpeg\" alt=\"Retrato asociado al 26 de mayo de 2005\"></button></div><h1>“Memento amare”</h1></header><div id=\"calendar-map\" class=\"calendar-map\"><div id=\"calendar-space\" class=\"calendar-space\"><section id=\"calendar-stage\" class=\"calendar\" aria-label=\"Calendario de 90 años\"><div class=\"calendar-head\"><span class=\"year-heading\">AÑO</span><div class=\"week-ruler\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\"><meta name=\"theme-color\" content=\"#f5f5f5\"><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\"><meta name=\"apple-mobile-web-app-title\" content=\"Memore\"><meta name=\"description\" content=\"Un calendario de nuestras vidas.\"><title>Memore</title><link rel=\"icon\" href=\"./assets/icon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./assets/icon.png\"><link rel=\"manifest\" href=\"./assets/manifest.webmanifest\"><link rel=\"stylesheet\" href=\"./assets/app.css?v=10\"><script src=\"./assets/htmx.min.js\" defer></script><script src=\"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2\" defer></script><script src=\"./assets/app.js?v=10\" defer></script></head><body hx-boost=\"true\"><main class=\"memore\" aria-label=\"Calendario de vida de Gael y Juanmi\"><canvas id=\"life-lines\" aria-hidden=\"true\"></canvas><header class=\"header\"><div class=\"portraits\" aria-label=\"Gael y Juanmi\"><button class=\"portrait-button\" type=\"button\" data-portrait=\"january\" aria-label=\"Editar primer retrato\"><img id=\"portrait-january\" data-birth-date=\"2005-01-15\" src=\"./assets/juanmi.png\" alt=\"Retrato asociado al 15 de enero de 2005\"></button> <button class=\"portrait-button\" type=\"button\" data-portrait=\"may\" aria-label=\"Editar segundo retrato\"><img id=\"portrait-may\" data-birth-date=\"2005-05-26\" src=\"./assets/gael.jpeg\" alt=\"Retrato asociado al 26 de mayo de 2005\"></button></div><h1>“Memento amare”</h1></header><div id=\"calendar-map\" class=\"calendar-map\"><div id=\"calendar-space\" class=\"calendar-space\"><section id=\"calendar-stage\" class=\"calendar\" aria-label=\"Calendario de 90 años\"><div class=\"calendar-head\"><span class=\"year-heading\">AÑO</span><div class=\"week-ruler\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -75,7 +75,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--week:%d", week))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 78, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 79, Col: 72}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -88,7 +88,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(week))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 78, Col: 93}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 79, Col: 93}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -139,7 +139,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--year:%d", year))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 92, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 93, Col: 72}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -152,7 +152,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(year))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 92, Col: 93}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 93, Col: 93}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -203,7 +203,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 104, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 105, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -216,7 +216,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(weekStart(index).Format("2006-01-02"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 105, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 106, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -229,7 +229,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(weekLabel(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 106, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 107, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -242,7 +242,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(weekLabel(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 107, Col: 38}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 108, Col: 38}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -253,40 +253,40 @@ func Page() templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div></div></section></div></div><footer class=\"counter\" aria-label=\"Tiempo juntos desde el 14 de noviembre de 2024\"><div><strong id=\"days\">000</strong><small>DÍAS</small></div><span>:</span><div><strong id=\"hours\">00</strong><small>HRS</small></div><span>:</span><div><strong id=\"minutes\">00</strong><small>MIN</small></div><span>:</span><div><strong id=\"seconds\">00</strong><small>SEG</small></div></footer><section class=\"moments\" aria-label=\"Momentos de tu vida\"><div class=\"moment-actions\"><button id=\"add-moment\" class=\"add-moment\" type=\"button\" aria-label=\"Añadir un momento\">+</button> <button id=\"add-season\" class=\"add-season\" type=\"button\" aria-label=\"Añadir una temporada\"><span class=\"season-symbol\" aria-hidden=\"true\"></span></button></div><p id=\"moment-note\" class=\"moment-note\" aria-live=\"polite\" hidden></p><button id=\"scroll-seasons\" class=\"scroll-cue\" type=\"button\" aria-label=\"Deslizar hasta las temporadas\"><span>Desliza</span><i>↓</i></button><section class=\"season-index\" aria-label=\"Temporadas guardadas\"><h2>Temporadas</h2><div id=\"season-list\"></div></section></section></main><dialog id=\"moment-dialog\" class=\"moment-dialog\"><form id=\"moment-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir momento</h2><button id=\"close-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><label for=\"moment-date\">Fecha</label> <input id=\"moment-date\" name=\"date\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div></div></section></div></div><footer class=\"counter\" aria-label=\"Tiempo juntos desde el 14 de noviembre de 2024\"><div><strong id=\"days\">000</strong><small>DÍAS</small></div><span>:</span><div><strong id=\"hours\">00</strong><small>HRS</small></div><span>:</span><div><strong id=\"minutes\">00</strong><small>MIN</small></div><span>:</span><div><strong id=\"seconds\">00</strong><small>SEG</small></div></footer><section class=\"moments\" aria-label=\"Momentos de tu vida\"><div class=\"moment-actions\"><button id=\"add-moment\" class=\"add-moment\" type=\"button\" aria-label=\"Añadir un momento\">+</button> <button id=\"add-season\" class=\"add-season\" type=\"button\" aria-label=\"Añadir una temporada\"><span class=\"season-symbol\" aria-hidden=\"true\"></span></button></div><p id=\"moment-note\" class=\"moment-note\" aria-live=\"polite\" hidden></p><button id=\"scroll-seasons\" class=\"scroll-cue\" type=\"button\" aria-label=\"Deslizar hasta las temporadas\"><span>Desliza</span><i>↓</i></button><section class=\"season-index\" aria-label=\"Temporadas guardadas\"><h2>Temporadas</h2><div id=\"season-list\"></div></section></section></main><dialog id=\"moment-dialog\" class=\"moment-dialog\"><form id=\"moment-form\" method=\"dialog\" hx-boost=\"false\" novalidate><div class=\"dialog-heading\"><h2>Añadir momento</h2><button id=\"close-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><label for=\"moment-date\">Fecha</label> <input id=\"moment-date\" name=\"date\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 147, Col: 190}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 148, Col: 190}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" required> <label for=\"moment-description\">Breve descripción</label> <input id=\"moment-description\" name=\"description\" type=\"text\" maxlength=\"80\" placeholder=\"El comienzo de una nueva etapa\" required> <label for=\"moment-image\">Imagen <span>(opcional)</span></label> <input id=\"moment-image\" name=\"image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"portrait-dialog\" class=\"moment-dialog\"><form id=\"portrait-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Editar retrato</h2><button id=\"close-portrait-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"portrait-key\" type=\"hidden\"> <label for=\"portrait-date\">Fecha asociada</label> <input id=\"portrait-date\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" required> <label for=\"moment-description\">Breve descripción</label> <input id=\"moment-description\" name=\"description\" type=\"text\" maxlength=\"80\" placeholder=\"El comienzo de una nueva etapa\" required> <label for=\"moment-image\">Imagen <span>(opcional)</span></label> <input id=\"moment-image\" name=\"image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"portrait-dialog\" class=\"moment-dialog\"><form id=\"portrait-form\" method=\"dialog\" hx-boost=\"false\" novalidate><div class=\"dialog-heading\"><h2>Editar retrato</h2><button id=\"close-portrait-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"portrait-key\" type=\"hidden\"> <label for=\"portrait-date\">Fecha asociada</label> <input id=\"portrait-date\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 171, Col: 180}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 172, Col: 180}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" required> <label for=\"portrait-image\">Retrato</label> <input id=\"portrait-image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"season-dialog\" class=\"moment-dialog\"><form id=\"season-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir temporada</h2><button id=\"close-season-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><label for=\"season-start\">Desde</label> <input id=\"season-start\" name=\"start\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\" required> <label for=\"portrait-image\">Retrato</label> <input id=\"portrait-image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"season-dialog\" class=\"moment-dialog\"><form id=\"season-form\" method=\"dialog\" hx-boost=\"false\" novalidate><div class=\"dialog-heading\"><h2>Añadir temporada</h2><button id=\"close-season-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><label for=\"season-start\">Desde</label> <input id=\"season-start\" name=\"start\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 185, Col: 192}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 186, Col: 192}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -299,13 +299,13 @@ func Page() templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 187, Col: 188}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 188, Col: 188}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" required> <label for=\"season-label\">Nombre</label> <input id=\"season-label\" name=\"label\" type=\"text\" maxlength=\"36\" placeholder=\"Una nueva temporada\" required> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"moment-detail\" class=\"moment-dialog detail-dialog\"><div class=\"dialog-heading\"><time id=\"detail-date\"></time> <button id=\"close-detail\" type=\"button\" aria-label=\"Cerrar\">×</button></div><img id=\"detail-image\" alt=\"Imagen guardada para este momento\" hidden><p id=\"detail-description\"></p></dialog></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" required> <label for=\"season-label\">Nombre</label> <input id=\"season-label\" name=\"label\" type=\"text\" maxlength=\"36\" placeholder=\"Una nueva temporada\" required> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"moment-detail\" class=\"moment-dialog detail-dialog\"><div class=\"dialog-heading\"><time id=\"detail-date\"></time> <button id=\"close-detail\" type=\"button\" aria-label=\"Cerrar\">×</button></div><img id=\"detail-image\" alt=\"Imagen guardada para este momento\" hidden><p id=\"detail-description\"></p></dialog> <dialog id=\"cloud-dialog\" class=\"moment-dialog cloud-dialog\"><form id=\"cloud-form\" hx-boost=\"false\" novalidate><div class=\"dialog-heading\"><h2>Memore compartido</h2></div><p>Inicia sesión para compartir el calendario entre vuestros teléfonos.</p><label for=\"cloud-email\">Correo</label> <input id=\"cloud-email\" type=\"email\" autocomplete=\"email\" required> <label for=\"cloud-password\">Contraseña</label> <input id=\"cloud-password\" type=\"password\" autocomplete=\"current-password\" required><p id=\"cloud-error\" class=\"cloud-error\" role=\"alert\" hidden></p><button class=\"save-moment\" type=\"submit\" aria-label=\"Entrar\">✓</button></form></dialog></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

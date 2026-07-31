@@ -49,9 +49,10 @@ templ Page() {
 			<link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
 			<link rel="apple-touch-icon" href="./assets/icon.png"/>
 			<link rel="manifest" href="./assets/manifest.webmanifest"/>
-			<link rel="stylesheet" href="./assets/app.css?v=8"/>
+			<link rel="stylesheet" href="./assets/app.css?v=10"/>
 			<script src="./assets/htmx.min.js" defer></script>
-			<script src="./assets/app.js?v=8" defer></script>
+			<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+			<script src="./assets/app.js?v=10" defer></script>
 		</head>
 		<body hx-boost="true">
 			<main class="memore" aria-label="Calendario de vida de Gael y Juanmi">
@@ -138,7 +139,7 @@ templ Page() {
 			</main>
 
 			<dialog id="moment-dialog" class="moment-dialog">
-				<form id="moment-form" method="dialog" hx-boost="false">
+				<form id="moment-form" method="dialog" hx-boost="false" novalidate>
 					<div class="dialog-heading">
 						<h2>Añadir momento</h2>
 						<button id="close-dialog" type="button" aria-label="Cerrar">×</button>
@@ -161,7 +162,7 @@ templ Page() {
 			</dialog>
 
 			<dialog id="portrait-dialog" class="moment-dialog">
-				<form id="portrait-form" method="dialog" hx-boost="false">
+				<form id="portrait-form" method="dialog" hx-boost="false" novalidate>
 					<div class="dialog-heading">
 						<h2>Editar retrato</h2>
 						<button id="close-portrait-dialog" type="button" aria-label="Cerrar">×</button>
@@ -176,7 +177,7 @@ templ Page() {
 			</dialog>
 
 			<dialog id="season-dialog" class="moment-dialog">
-				<form id="season-form" method="dialog" hx-boost="false">
+				<form id="season-form" method="dialog" hx-boost="false" novalidate>
 					<div class="dialog-heading">
 						<h2>Añadir temporada</h2>
 						<button id="close-season-dialog" type="button" aria-label="Cerrar">×</button>
@@ -198,6 +199,18 @@ templ Page() {
 				</div>
 				<img id="detail-image" alt="Imagen guardada para este momento" hidden/>
 				<p id="detail-description"></p>
+			</dialog>
+			<dialog id="cloud-dialog" class="moment-dialog cloud-dialog">
+				<form id="cloud-form" hx-boost="false" novalidate>
+					<div class="dialog-heading"><h2>Memore compartido</h2></div>
+					<p>Inicia sesión para compartir el calendario entre vuestros teléfonos.</p>
+					<label for="cloud-email">Correo</label>
+					<input id="cloud-email" type="email" autocomplete="email" required/>
+					<label for="cloud-password">Contraseña</label>
+					<input id="cloud-password" type="password" autocomplete="current-password" required/>
+					<p id="cloud-error" class="cloud-error" role="alert" hidden></p>
+					<button class="save-moment" type="submit" aria-label="Entrar">✓</button>
+				</form>
 			</dialog>
 		</body>
 	</html>

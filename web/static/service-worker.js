@@ -1,4 +1,4 @@
-const CACHE = "memore-v8";
+const CACHE = "memore-v10";
 const ASSETS = [
   "../",
   "./app.css",
