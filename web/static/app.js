@@ -104,6 +104,53 @@
     return local.toISOString().slice(0, 10);
   }
 
+  function formatWrittenDate(isoDate) {
+    if (!isoDate) return "";
+    const [year, month, day] = isoDate.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  function parseWrittenDate(input) {
+    const raw = input.value.trim();
+    const compact = raw.replace(/\D/g, "");
+    let day;
+    let month;
+    let year;
+    if (compact.length === 8) {
+      day = Number(compact.slice(0, 2));
+      month = Number(compact.slice(2, 4));
+      year = Number(compact.slice(4));
+    } else {
+      const parts = raw.split(/\D+/).filter(Boolean);
+      if (parts.length !== 3) return "";
+      [day, month, year] = parts.map(Number);
+    }
+    const candidate = new Date(Date.UTC(year, month - 1, day));
+    if (
+      candidate.getUTCFullYear() !== year ||
+      candidate.getUTCMonth() !== month - 1 ||
+      candidate.getUTCDate() !== day
+    ) return "";
+    const isoDate = `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    if (isoDate < "2005-01-15" || isoDate > input.dataset.calendarMax) return "";
+    return isoDate;
+  }
+
+  function requireWrittenDate(input) {
+    const date = parseWrittenDate(input);
+    input.setCustomValidity(date ? "" : "Escribe una fecha válida: DD/MM/AAAA");
+    if (!date) input.reportValidity();
+    return date;
+  }
+
+  document.querySelectorAll(".written-date").forEach((input) => {
+    input.addEventListener("input", () => input.setCustomValidity(""));
+    input.addEventListener("blur", () => {
+      const date = parseWrittenDate(input);
+      if (date) input.value = formatWrittenDate(date);
+    });
+  });
+
   function updateCalendar() {
     const now = Date.now();
     grid.querySelectorAll(".week").forEach((cell) => {
@@ -265,7 +312,7 @@
     const portrait = document.querySelector(`#portrait-${key}`);
     if (!portrait) return;
     portraitKeyInput.value = key;
-    portraitDateInput.value = portrait.dataset.birthDate;
+    portraitDateInput.value = formatWrittenDate(portrait.dataset.birthDate);
     portraitImageInput.value = "";
     portraitImageInput.required = false;
     portraitDialog.querySelector("h2").textContent = "Editar retrato";
@@ -543,8 +590,8 @@
 
   document.querySelector("#add-moment").addEventListener("click", () => {
     const today = todayString();
-    dateInput.max = today < dateInput.dataset.calendarMax ? today : dateInput.dataset.calendarMax;
-    dateInput.value = dateInput.max;
+    const latestDate = today < dateInput.dataset.calendarMax ? today : dateInput.dataset.calendarMax;
+    dateInput.value = formatWrittenDate(latestDate);
     descriptionInput.value = "";
     imageInput.value = "";
     dialog.showModal();
@@ -553,8 +600,8 @@
 
   document.querySelector("#add-season").addEventListener("click", () => {
     const today = todayString();
-    seasonStartInput.value = today;
-    seasonEndInput.value = today;
+    seasonStartInput.value = formatWrittenDate(today);
+    seasonEndInput.value = formatWrittenDate(today);
     seasonLabelInput.value = "";
     pendingSeasonColor = undefined;
     seasonDialog.showModal();
@@ -592,7 +639,7 @@
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const date = dateInput.value;
+    const date = requireWrittenDate(dateInput);
     const description = descriptionInput.value.trim();
     const index = weekIndex(date);
     if (!date || !description || date > todayString() || index < 0 || index >= 90 * 52) return;
@@ -621,10 +668,16 @@
 
   seasonForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    const start = seasonStartInput.value;
-    const end = seasonEndInput.value;
+    const start = requireWrittenDate(seasonStartInput);
+    const end = requireWrittenDate(seasonEndInput);
     const label = seasonLabelInput.value.trim();
-    if (!start || !end || !label || start > end || end > todayString()) return;
+    if (!start || !end || !label || start > end || end > todayString()) {
+      if (start && end && start > end) {
+        seasonEndInput.setCustomValidity("La fecha final debe ser posterior a la inicial");
+        seasonEndInput.reportValidity();
+      }
+      return;
+    }
 
     const seasons = readSeasons();
     seasons.push({
@@ -646,7 +699,7 @@
   portraitForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const key = portraitKeyInput.value;
-    const date = portraitDateInput.value;
+    const date = requireWrittenDate(portraitDateInput);
     const image = portraitImageInput.files[0];
     if (!key || !date || date > todayString()) return;
     if (image) await storeImage(`portrait-${key}`, image);
@@ -658,8 +711,6 @@
     await loadPortraits();
   });
 
-  dateInput.dataset.calendarMax = dateInput.max;
-  dateInput.max = todayString() < dateInput.max ? todayString() : dateInput.max;
   updateCalendar();
   renderSeasons();
   renderMoments();
