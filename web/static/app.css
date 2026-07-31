@@ -239,6 +239,27 @@ html[data-theme="dark"] .theme-toggle {
   background: #ece9e4;
   color: #1d1c1a;
 }
+html[data-theme="dark"] .counter,
+html[data-theme="dark"] .counter strong {
+  color: #ece9e4;
+}
+html[data-theme="dark"] .counter > span,
+html[data-theme="dark"] .counter small {
+  color: rgb(236 233 228 / 68%);
+}
+html[data-theme="dark"] .add-moment,
+html[data-theme="dark"] .add-season {
+  border-color: rgb(236 233 228 / 58%);
+  color: #ece9e4;
+}
+html[data-theme="dark"] .season-symbol,
+html[data-theme="dark"] .season-symbol::before,
+html[data-theme="dark"] .season-symbol::after {
+  background: #ece9e4;
+}
+html[data-theme="dark"] .scroll-cue {
+  color: rgb(236 233 228 / 62%);
+}
 
 .calendar-map {
   position: relative;

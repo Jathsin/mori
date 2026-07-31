@@ -1,4 +1,4 @@
-const CACHE = "memore-v15";
+const CACHE = "memore-v17";
 const ASSETS = [
   "../",
   "./app.css",
@@ -7,7 +7,7 @@ const ASSETS = [
   "./inter.ttf",
   "./gael.jpeg",
   "./juanmi.png",
-  "./juanmi-2026.png",
+  "./juanmi-2026.jpg",
   "./icon.svg",
   "./icon.png",
   "./manifest.webmanifest",
