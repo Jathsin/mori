@@ -40,7 +40,7 @@ func main() {
 		"juanmi-2026.jpg",
 		"icon.svg",
 		"icon.png",
-		"icon-v2.png",
+		"icon-solid-v3.png",
 		"manifest.webmanifest",
 		"service-worker.js",
 	} {
