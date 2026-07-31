@@ -34,17 +34,6 @@ func yearTicks() []int {
 	return values
 }
 
-templ DateWheel(name string) {
-	<div class="date-wheel" data-date-wheel={ name }>
-		<span class="date-wheel-label">DÍA</span>
-		<span class="date-wheel-label">MES</span>
-		<span class="date-wheel-label">AÑO</span>
-		<button class="date-wheel-field date-wheel-day" type="button" data-unit="day" data-min="1" data-max="31" aria-label="Día"></button>
-		<button class="date-wheel-field date-wheel-month" type="button" data-unit="month" data-min="1" data-max="12" aria-label="Mes"></button>
-		<button class="date-wheel-field date-wheel-year" type="button" data-unit="year" data-min="2005" data-max="2094" aria-label="Año"></button>
-	</div>
-}
-
 templ Page() {
 	<!doctype html>
 	<html lang="es">
@@ -154,8 +143,8 @@ templ Page() {
 						<h2>Añadir momento</h2>
 						<button id="close-dialog" type="button" aria-label="Cerrar">×</button>
 					</div>
-					<input id="moment-date" name="date" type="hidden" min="2005-01-15" max={ calendarEnd() }/>
-					@DateWheel("moment-date")
+					<label for="moment-date">Fecha</label>
+					<input id="moment-date" name="date" type="date" min="2005-01-15" max={ calendarEnd() } required/>
 					<label for="moment-description">Breve descripción</label>
 					<input
 						id="moment-description"
@@ -178,8 +167,8 @@ templ Page() {
 						<button id="close-portrait-dialog" type="button" aria-label="Cerrar">×</button>
 					</div>
 					<input id="portrait-key" type="hidden"/>
-					<input id="portrait-date" type="hidden"/>
-					@DateWheel("portrait-date")
+					<label for="portrait-date">Fecha asociada</label>
+					<input id="portrait-date" type="date" min="2005-01-15" max={ calendarEnd() } required/>
 					<label for="portrait-image">Retrato</label>
 					<input id="portrait-image" type="file" accept="image/*"/>
 					<button class="save-moment" type="submit" aria-label="Guardar">✓</button>
@@ -192,12 +181,10 @@ templ Page() {
 						<h2>Añadir temporada</h2>
 						<button id="close-season-dialog" type="button" aria-label="Cerrar">×</button>
 					</div>
-					<label>Desde</label>
-					<input id="season-start" name="start" type="hidden"/>
-					@DateWheel("season-start")
-					<label>Hasta</label>
-					<input id="season-end" name="end" type="hidden"/>
-					@DateWheel("season-end")
+					<label for="season-start">Desde</label>
+					<input id="season-start" name="start" type="date" min="2005-01-15" max={ calendarEnd() } required/>
+					<label for="season-end">Hasta</label>
+					<input id="season-end" name="end" type="date" min="2005-01-15" max={ calendarEnd() } required/>
 					<label for="season-label">Nombre</label>
 					<input id="season-label" name="label" type="text" maxlength="36" placeholder="Una nueva temporada" required/>
 					<button class="save-moment" type="submit" aria-label="Guardar">✓</button>

@@ -544,68 +544,14 @@ h1 {
   font: 550 9px/1 "Inter", sans-serif;
 }
 
-.date-wheel {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 15px 84px;
-  column-gap: 15px;
-  align-self: center;
-  width: min(100%, 255px);
-  margin: 2px auto 8px;
-}
-
-.date-wheel-label {
-  color: rgb(26 23 19 / 34%);
-  font: 600 7px/1 "Inter", sans-serif;
-  letter-spacing: 0.65px;
-  text-align: center;
-}
-
-.date-wheel-field {
-  position: relative;
-  display: grid;
-  grid-template-rows: repeat(3, 28px);
-  align-items: center;
-  min-width: 0;
-  height: 84px;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  font: 450 16px/28px "Inter", sans-serif;
+.moment-dialog input[type="date"] {
+  min-height: 42px;
+  color-scheme: light;
   font-variant-numeric: tabular-nums;
-  cursor: ns-resize;
-  touch-action: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.date-wheel-field::before,
-.date-wheel-field::after {
-  position: absolute;
-  z-index: 2;
-  right: 2px;
-  left: 2px;
-  height: 1px;
-  background: rgb(26 23 19 / 10%);
-  content: "";
-}
-
-.date-wheel-field::before { top: 27px; }
-.date-wheel-field::after { bottom: 27px; }
-
-.date-wheel-value {
-  color: rgb(26 23 19 / 20%);
-  pointer-events: none;
-}
-
-.date-wheel-value.current {
-  color: rgb(26 23 19 / 86%);
-  font-weight: 550;
-}
-
-.date-wheel-field:focus-visible {
-  background: rgb(26 23 19 / 3%);
+.moment-dialog input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
 }
 
 .season-index {

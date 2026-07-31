@@ -104,81 +104,6 @@
     return local.toISOString().slice(0, 10);
   }
 
-  function setDateWheel(input) {
-    const wheel = document.querySelector(`[data-date-wheel="${input.id}"]`);
-    if (!wheel || !input.value) return;
-    const [year, month, day] = input.value.split("-");
-    setDateWheelField(wheel.querySelector(".date-wheel-day"), Number(day));
-    setDateWheelField(wheel.querySelector(".date-wheel-month"), Number(month));
-    setDateWheelField(wheel.querySelector(".date-wheel-year"), Number(year));
-  }
-
-  function syncDateWheel(wheel) {
-    const year = Number(wheel.querySelector(".date-wheel-year").dataset.value);
-    const month = Number(wheel.querySelector(".date-wheel-month").dataset.value);
-    const chosenDay = Number(wheel.querySelector(".date-wheel-day").dataset.value);
-    const maximumDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
-    const day = Math.min(chosenDay, maximumDay);
-    const input = document.querySelector(`#${wheel.dataset.dateWheel}`);
-    input.value = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    if (day !== chosenDay) setDateWheelField(wheel.querySelector(".date-wheel-day"), day);
-  }
-
-  function setDateWheelField(field, value) {
-    const minimum = Number(field.dataset.min);
-    const maximum = field.dataset.unit === "year"
-      ? Math.min(Number(field.dataset.max), new Date().getFullYear())
-      : Number(field.dataset.max);
-    const range = maximum - minimum + 1;
-    const wrapped = minimum + ((((value - minimum) % range) + range) % range);
-    field.dataset.value = String(wrapped);
-    field.replaceChildren();
-    [-1, 0, 1].forEach((offset) => {
-      const neighboringValue = minimum + ((((wrapped + offset - minimum) % range) + range) % range);
-      const valueElement = document.createElement("span");
-      valueElement.className = `date-wheel-value${offset === 0 ? " current" : ""}`;
-      valueElement.textContent = field.dataset.unit === "year"
-        ? String(neighboringValue)
-        : String(neighboringValue).padStart(2, "0");
-      field.append(valueElement);
-    });
-    field.setAttribute("aria-valuemin", String(minimum));
-    field.setAttribute("aria-valuemax", String(maximum));
-    field.setAttribute("aria-valuenow", String(wrapped));
-    field.setAttribute("aria-valuetext", field.querySelector(".current").textContent);
-  }
-
-  function moveDateWheelField(field, amount) {
-    setDateWheelField(field, Number(field.dataset.value) + amount);
-    syncDateWheel(field.closest(".date-wheel"));
-  }
-
-  document.querySelectorAll(".date-wheel").forEach((wheel) => {
-    wheel.querySelectorAll(".date-wheel-field").forEach((field) => {
-      let startY;
-      field.addEventListener("wheel", (event) => {
-        event.preventDefault();
-        moveDateWheelField(field, event.deltaY > 0 ? 1 : -1);
-      }, { passive: false });
-      field.addEventListener("pointerdown", (event) => {
-        startY = event.clientY;
-        field.setPointerCapture(event.pointerId);
-      });
-      field.addEventListener("pointerup", (event) => {
-        if (startY === undefined) return;
-        const movement = startY - event.clientY;
-        if (Math.abs(movement) >= 8) moveDateWheelField(field, Math.round(movement / 18));
-        startY = undefined;
-      });
-      field.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-          event.preventDefault();
-          moveDateWheelField(field, event.key === "ArrowUp" ? 1 : -1);
-        }
-      });
-    });
-  });
-
   function updateCalendar() {
     const now = Date.now();
     grid.querySelectorAll(".week").forEach((cell) => {
@@ -341,7 +266,6 @@
     if (!portrait) return;
     portraitKeyInput.value = key;
     portraitDateInput.value = portrait.dataset.birthDate;
-    setDateWheel(portraitDateInput);
     portraitImageInput.value = "";
     portraitImageInput.required = false;
     portraitDialog.querySelector("h2").textContent = "Editar retrato";
@@ -621,7 +545,6 @@
     const today = todayString();
     dateInput.max = today < dateInput.dataset.calendarMax ? today : dateInput.dataset.calendarMax;
     dateInput.value = dateInput.max;
-    setDateWheel(dateInput);
     descriptionInput.value = "";
     imageInput.value = "";
     dialog.showModal();
@@ -632,8 +555,6 @@
     const today = todayString();
     seasonStartInput.value = today;
     seasonEndInput.value = today;
-    setDateWheel(seasonStartInput);
-    setDateWheel(seasonEndInput);
     seasonLabelInput.value = "";
     pendingSeasonColor = undefined;
     seasonDialog.showModal();
@@ -671,7 +592,6 @@
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    syncDateWheel(document.querySelector('[data-date-wheel="moment-date"]'));
     const date = dateInput.value;
     const description = descriptionInput.value.trim();
     const index = weekIndex(date);
@@ -701,8 +621,6 @@
 
   seasonForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    syncDateWheel(document.querySelector('[data-date-wheel="season-start"]'));
-    syncDateWheel(document.querySelector('[data-date-wheel="season-end"]'));
     const start = seasonStartInput.value;
     const end = seasonEndInput.value;
     const label = seasonLabelInput.value.trim();
@@ -727,7 +645,6 @@
 
   portraitForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    syncDateWheel(document.querySelector('[data-date-wheel="portrait-date"]'));
     const key = portraitKeyInput.value;
     const date = portraitDateInput.value;
     const image = portraitImageInput.files[0];
