@@ -1,4 +1,4 @@
-const CACHE = "memore-v12";
+const CACHE = "memore-v15";
 const ASSETS = [
   "../",
   "./app.css",
@@ -7,6 +7,7 @@ const ASSETS = [
   "./inter.ttf",
   "./gael.jpeg",
   "./juanmi.png",
+  "./juanmi-2026.png",
   "./icon.svg",
   "./icon.png",
   "./manifest.webmanifest",
@@ -28,6 +29,18 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put("../", copy));
+          return response;
+        })
+        .catch(() => caches.match("../")),
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((cached) => cached || fetch(event.request)),
   );

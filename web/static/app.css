@@ -60,6 +60,57 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+body,
+.memore,
+.calendar,
+.week,
+.moment-dialog,
+.theme-toggle,
+.save-moment,
+.add-moment,
+.add-season,
+.counter,
+.counter strong,
+.counter small,
+.week-number,
+.year-number,
+.week-heading,
+.year-heading,
+.season-title,
+.scroll-cue,
+input,
+label {
+  transition:
+    background-color 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 300ms ease;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 380ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: 0.01ms; }
+
+  body,
+  .memore,
+  .calendar,
+  .week,
+  .moment-dialog,
+  .theme-toggle,
+  .save-moment,
+  .add-moment,
+  .add-season,
+  .counter,
+  input,
+  label { transition-duration: 0.01ms; }
+}
+
 .memore {
   position: relative;
   isolation: isolate;
@@ -182,6 +233,12 @@ html[data-theme="dark"] .moment-dialog input { color: var(--ink); border-bottom-
 html[data-theme="dark"] .moment-dialog label,
 html[data-theme="dark"] .detail-dialog time,
 html[data-theme="dark"] .detail-dialog p { color: rgb(236 233 228 / 65%); }
+html[data-theme="dark"] .save-moment,
+html[data-theme="dark"] .theme-toggle {
+  border-color: #ece9e4;
+  background: #ece9e4;
+  color: #1d1c1a;
+}
 
 .calendar-map {
   position: relative;

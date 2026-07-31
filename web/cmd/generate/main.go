@@ -37,6 +37,7 @@ func main() {
 		"crimson-semibold.ttf",
 		"gael.jpeg",
 		"juanmi.png",
+		"juanmi-2026.png",
 		"icon.svg",
 		"icon.png",
 		"manifest.webmanifest",

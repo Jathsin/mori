@@ -388,7 +388,8 @@
       portrait.dataset.birthDate = value.date;
       portrait.alt = `Retrato asociado al ${value.date}`;
       try {
-        const image = await readImage(`portrait-${key}`);
+        const imageKey = key === "january" ? "portrait-january-v2" : `portrait-${key}`;
+        const image = await readImage(imageKey);
         if (!image) return;
         const previousURL = portraitImageURLs.get(key);
         if (previousURL) URL.revokeObjectURL(previousURL);
@@ -719,10 +720,17 @@
   document.querySelector("#close-portrait-dialog").addEventListener("click", () => portraitDialog.close());
   document.querySelector("#close-detail").addEventListener("click", () => detailDialog.close());
   document.querySelector("#theme-toggle").addEventListener("click", () => {
-    const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem("memore-theme", theme);
-    window.requestAnimationFrame(drawLifeLines);
+    const applyTheme = () => {
+      const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem("memore-theme", theme);
+      window.requestAnimationFrame(drawLifeLines);
+    };
+    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.startViewTransition(applyTheme);
+    } else {
+      applyTheme();
+    }
   });
   document.querySelector("#delete-moment").addEventListener("click", async () => {
     if (!detailMomentId) return;
@@ -831,7 +839,10 @@
     const date = requireWrittenDate(portraitDateInput);
     const image = portraitImageInput.files[0];
     if (!key || !date || date > todayString()) return;
-    if (image) await storeImage(`portrait-${key}`, image);
+    if (image) {
+      const imageKey = key === "january" ? "portrait-january-v2" : `portrait-${key}`;
+      await storeImage(imageKey, image);
+    }
 
     const settings = readPortraitSettings();
     settings[key] = { date };
