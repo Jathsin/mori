@@ -295,14 +295,14 @@ func Page() templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div></div></section></div></div><footer class=\"counter\" aria-label=\"Tiempo juntos desde el 14 de noviembre de 2024\"><div><strong id=\"days\">000</strong><small>DÍAS</small></div><span>:</span><div><strong id=\"hours\">00</strong><small>HRS</small></div><span>:</span><div><strong id=\"minutes\">00</strong><small>MIN</small></div><span>:</span><div><strong id=\"seconds\">00</strong><small>SEG</small></div></footer><section class=\"moments\" aria-label=\"Momentos de tu vida\"><button id=\"add-moment\" class=\"add-moment\" type=\"button\" aria-label=\"Añadir un momento\">+</button><p id=\"moment-note\" class=\"moment-note\" aria-live=\"polite\" hidden></p><button id=\"scroll-seasons\" class=\"scroll-cue\" type=\"button\" aria-label=\"Deslizar hasta las temporadas\"><span>Desliza</span><i>↓</i></button><section class=\"season-index\" aria-label=\"Temporadas guardadas\"><h2>Temporadas</h2><div id=\"season-list\"></div></section></section></main><dialog id=\"moment-dialog\" class=\"moment-dialog\"><form id=\"moment-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir momento</h2><button id=\"close-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"moment-date\" name=\"date\" type=\"hidden\" min=\"2005-01-15\" max=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div></div></section></div></div><footer class=\"counter\" aria-label=\"Tiempo juntos desde el 14 de noviembre de 2024\"><div><strong id=\"days\">000</strong><small>DÍAS</small></div><span>:</span><div><strong id=\"hours\">00</strong><small>HRS</small></div><span>:</span><div><strong id=\"minutes\">00</strong><small>MIN</small></div><span>:</span><div><strong id=\"seconds\">00</strong><small>SEG</small></div></footer><section class=\"moments\" aria-label=\"Momentos de tu vida\"><div class=\"moment-actions\"><button id=\"add-moment\" class=\"add-moment\" type=\"button\" aria-label=\"Añadir un momento\">+</button> <button id=\"add-season\" class=\"add-season\" type=\"button\" aria-label=\"Añadir una temporada\"><span class=\"season-symbol\" aria-hidden=\"true\"></span></button></div><p id=\"moment-note\" class=\"moment-note\" aria-live=\"polite\" hidden></p><button id=\"scroll-seasons\" class=\"scroll-cue\" type=\"button\" aria-label=\"Deslizar hasta las temporadas\"><span>Desliza</span><i>↓</i></button><section class=\"season-index\" aria-label=\"Temporadas guardadas\"><h2>Temporadas</h2><div id=\"season-list\"></div></section></section></main><dialog id=\"moment-dialog\" class=\"moment-dialog\"><form id=\"moment-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir momento</h2><button id=\"close-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"moment-date\" name=\"date\" type=\"hidden\" min=\"2005-01-15\" max=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 154, Col: 91}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 157, Col: 91}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -324,7 +324,23 @@ func Page() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<label for=\"portrait-image\">Retrato</label> <input id=\"portrait-image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"season-dialog\" class=\"moment-dialog\"><form id=\"season-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir temporada</h2><button id=\"close-season-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><p id=\"season-range\" class=\"season-range\"></p><input id=\"season-start\" name=\"start\" type=\"hidden\"> <input id=\"season-end\" name=\"end\" type=\"hidden\"> <label for=\"season-label\">Nombre</label> <input id=\"season-label\" name=\"label\" type=\"text\" maxlength=\"36\" placeholder=\"Una nueva temporada\" required> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"moment-detail\" class=\"moment-dialog detail-dialog\"><div class=\"dialog-heading\"><time id=\"detail-date\"></time> <button id=\"close-detail\" type=\"button\" aria-label=\"Cerrar\">×</button></div><img id=\"detail-image\" alt=\"Imagen guardada para este momento\" hidden><p id=\"detail-description\"></p></dialog></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<label for=\"portrait-image\">Retrato</label> <input id=\"portrait-image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"season-dialog\" class=\"moment-dialog\"><form id=\"season-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir temporada</h2><button id=\"close-season-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><label>Desde</label> <input id=\"season-start\" name=\"start\" type=\"hidden\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = DateWheel("season-start").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<label>Hasta</label> <input id=\"season-end\" name=\"end\" type=\"hidden\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = DateWheel("season-end").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<label for=\"season-label\">Nombre</label> <input id=\"season-label\" name=\"label\" type=\"text\" maxlength=\"36\" placeholder=\"Una nueva temporada\" required> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"moment-detail\" class=\"moment-dialog detail-dialog\"><div class=\"dialog-heading\"><time id=\"detail-date\"></time> <button id=\"close-detail\" type=\"button\" aria-label=\"Cerrar\">×</button></div><img id=\"detail-image\" alt=\"Imagen guardada para este momento\" hidden><p id=\"detail-description\"></p></dialog></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

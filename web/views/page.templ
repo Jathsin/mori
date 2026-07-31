@@ -135,7 +135,10 @@ templ Page() {
 				</footer>
 
 				<section class="moments" aria-label="Momentos de tu vida">
-					<button id="add-moment" class="add-moment" type="button" aria-label="Añadir un momento">+</button>
+					<div class="moment-actions">
+						<button id="add-moment" class="add-moment" type="button" aria-label="Añadir un momento">+</button>
+						<button id="add-season" class="add-season" type="button" aria-label="Añadir una temporada"><span class="season-symbol" aria-hidden="true"></span></button>
+					</div>
 					<p id="moment-note" class="moment-note" aria-live="polite" hidden></p>
 					<button id="scroll-seasons" class="scroll-cue" type="button" aria-label="Deslizar hasta las temporadas"><span>Desliza</span><i>↓</i></button>
 					<section class="season-index" aria-label="Temporadas guardadas">
@@ -189,9 +192,12 @@ templ Page() {
 						<h2>Añadir temporada</h2>
 						<button id="close-season-dialog" type="button" aria-label="Cerrar">×</button>
 					</div>
-					<p id="season-range" class="season-range"></p>
+					<label>Desde</label>
 					<input id="season-start" name="start" type="hidden"/>
+					@DateWheel("season-start")
+					<label>Hasta</label>
 					<input id="season-end" name="end" type="hidden"/>
+					@DateWheel("season-end")
 					<label for="season-label">Nombre</label>
 					<input id="season-label" name="label" type="text" maxlength="36" placeholder="Una nueva temporada" required/>
 					<button class="save-moment" type="submit" aria-label="Guardar">✓</button>

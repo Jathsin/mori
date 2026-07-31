@@ -12,9 +12,6 @@
   const memore = document.querySelector(".memore");
   const grid = document.querySelector("#life-grid");
   const portraits = document.querySelector(".portraits");
-  const calendarMap = document.querySelector("#calendar-map");
-  const calendarSpace = document.querySelector("#calendar-space");
-  const calendarStage = document.querySelector("#calendar-stage");
   const lineCanvas = document.querySelector("#life-lines");
   const dialog = document.querySelector("#moment-dialog");
   const form = document.querySelector("#moment-form");
@@ -32,7 +29,6 @@
   const seasonStartInput = document.querySelector("#season-start");
   const seasonEndInput = document.querySelector("#season-end");
   const seasonLabelInput = document.querySelector("#season-label");
-  const seasonRange = document.querySelector("#season-range");
   const portraitDialog = document.querySelector("#portrait-dialog");
   const portraitForm = document.querySelector("#portrait-form");
   const portraitKeyInput = document.querySelector("#portrait-key");
@@ -43,14 +39,6 @@
   const portraitImageURLs = new Map();
   let expandedSeasonId;
   let pendingSeasonColor;
-  let calendarScale = 1;
-  let calendarCommittedScale = 1;
-  let zoomCommitTimer;
-  let calendarBaseWidth;
-  let calendarBaseHeight;
-  let mapDrawFrame;
-  const mapPointers = new Map();
-  let pinchStart;
   const fields = {
     days: document.querySelector("#days"),
     hours: document.querySelector("#hours"),
@@ -360,51 +348,6 @@
     portraitDialog.showModal();
   }
 
-  function prepareCalendarMap() {
-    calendarSpace.style.width = "100%";
-    calendarSpace.style.height = "auto";
-    calendarStage.style.removeProperty("width");
-    calendarCommittedScale = 1;
-    calendarStage.style.setProperty("--calendar-layout-scale", "1");
-    calendarStage.style.setProperty("--calendar-preview-scale", "1");
-    calendarBaseWidth = calendarStage.offsetWidth;
-    calendarBaseHeight = calendarStage.offsetHeight;
-    calendarStage.style.width = `${calendarBaseWidth}px`;
-    calendarMap.style.height = `${calendarBaseHeight}px`;
-    updateCalendarScale(calendarScale, false);
-  }
-
-  function updateCalendarScale(nextScale, preserveCenter = true, anchor) {
-    const previousScale = calendarScale;
-    const centerX = calendarMap.scrollLeft + calendarMap.clientWidth / 2;
-    const centerY = calendarMap.scrollTop + calendarMap.clientHeight / 2;
-    calendarScale = Math.min(3.5, Math.max(1, nextScale));
-    calendarStage.style.setProperty("--calendar-preview-scale", String(calendarScale / calendarCommittedScale));
-    calendarSpace.style.width = calendarScale <= 1.001 ? "100%" : `${calendarBaseWidth * calendarScale}px`;
-    calendarSpace.style.height = `${calendarBaseHeight * calendarScale}px`;
-    if (anchor) {
-      calendarMap.scrollLeft = anchor.contentX * calendarScale - anchor.x;
-      calendarMap.scrollTop = anchor.contentY * calendarScale - anchor.y;
-    } else if (preserveCenter && previousScale) {
-      calendarMap.scrollLeft = centerX * (calendarScale / previousScale) - calendarMap.clientWidth / 2;
-      calendarMap.scrollTop = centerY * (calendarScale / previousScale) - calendarMap.clientHeight / 2;
-    }
-    if (calendarScale <= 1.001) {
-      calendarMap.scrollLeft = 0;
-      calendarMap.scrollTop = 0;
-    }
-    window.clearTimeout(zoomCommitTimer);
-    zoomCommitTimer = window.setTimeout(commitCalendarScale, 130);
-    window.requestAnimationFrame(drawLifeLines);
-  }
-
-  function commitCalendarScale() {
-    calendarCommittedScale = calendarScale;
-    calendarStage.style.setProperty("--calendar-layout-scale", String(calendarCommittedScale));
-    calendarStage.style.setProperty("--calendar-preview-scale", "1");
-    window.requestAnimationFrame(drawLifeLines);
-  }
-
   function weekIndex(date) {
     return Math.floor((Date.parse(`${date}T00:00:00Z`) - lifeStart) / millisecondsPerWeek);
   }
@@ -412,7 +355,7 @@
   function renderSeasons() {
     const cells = grid.querySelectorAll(".week");
     cells.forEach((cell) => {
-      cell.classList.remove("season", "season-start", "season-end", "season-selected");
+      cell.classList.remove("season", "season-start", "season-end", "season-selected", "delete-anchor");
       cell.removeAttribute("data-season");
       cell.removeAttribute("data-season-id");
       cell.style.removeProperty("--season-color");
@@ -501,6 +444,7 @@
     const seasonId = cell.dataset.seasonId;
     if (!seasonId) return;
     grid.querySelectorAll(".season-selected").forEach((selected) => selected.classList.remove("season-selected"));
+    grid.querySelectorAll(".delete-anchor").forEach((anchor) => anchor.classList.remove("delete-anchor"));
     grid.querySelector(".delete-season-tag")?.remove();
     grid.querySelectorAll(`.week[data-season-id="${CSS.escape(seasonId)}"]`).forEach((seasonCell) => {
       seasonCell.classList.add("season-selected");
@@ -520,51 +464,8 @@
       note.textContent = "Temporada eliminada";
       note.hidden = false;
     });
+    cell.classList.add("delete-anchor");
     cell.append(deleteButton);
-  }
-
-  function dateAfterDays(date, days) {
-    const value = new Date(`${date}T00:00:00Z`);
-    value.setUTCDate(value.getUTCDate() + days);
-    return value.toISOString().slice(0, 10);
-  }
-
-  function clearSeasonPreview() {
-    grid.querySelectorAll(".season-preview").forEach((cell) => {
-      cell.classList.remove("season-preview");
-      cell.style.removeProperty("--season-preview-color");
-    });
-  }
-
-  function previewSeason(firstIndex, lastIndex) {
-    clearSeasonPreview();
-    const start = Math.min(firstIndex, lastIndex);
-    const end = Math.max(firstIndex, lastIndex);
-    pendingSeasonColor ||= randomSeasonColor(readSeasons());
-    const previewColor = pendingSeasonColor;
-    for (let index = start; index <= end; index += 1) {
-      const cell = grid.children[index];
-      cell?.classList.add("season-preview");
-      cell?.style.setProperty("--season-preview-color", previewColor);
-    }
-  }
-
-  function openSeasonSelection(firstIndex, lastIndex) {
-    clearSeasonPreview();
-    const startIndex = Math.min(firstIndex, lastIndex);
-    const endIndex = Math.max(firstIndex, lastIndex);
-    const startCell = grid.children[startIndex];
-    const endCell = grid.children[endIndex];
-    if (!startCell?.classList.contains("completed") || !endCell?.classList.contains("completed")) return;
-
-    const start = startCell.dataset.start;
-    const end = [dateAfterDays(endCell.dataset.start, 6), todayString()].sort()[0];
-    seasonStartInput.value = start;
-    seasonEndInput.value = end;
-    seasonRange.textContent = `${start} — ${end}`;
-    seasonLabelInput.value = "";
-    seasonDialog.showModal();
-    window.setTimeout(() => seasonLabelInput.focus(), 50);
   }
 
   function renderMoments() {
@@ -682,10 +583,6 @@
   });
 
   let pointerStart;
-  let selectionStartIndex;
-  let selectionEndIndex;
-  let selectionActive = false;
-  let selectionTimer;
 
   function cellAtPoint(x, y) {
     const element = document.elementFromPoint(x, y);
@@ -696,52 +593,14 @@
     if (event.target.closest(".delete-season-tag")) return;
     const cell = event.target.closest(".week.completed");
     if (!cell) return;
-    pendingSeasonColor = undefined;
     pointerStart = { x: event.clientX, y: event.clientY };
-    selectionStartIndex = Number(cell.dataset.index);
-    selectionEndIndex = selectionStartIndex;
-    selectionActive = event.pointerType === "mouse";
-    if (selectionActive) grid.setPointerCapture(event.pointerId);
-    else {
-      selectionTimer = window.setTimeout(() => {
-        selectionActive = true;
-        grid.setPointerCapture(event.pointerId);
-        previewSeason(selectionStartIndex, selectionEndIndex);
-      }, 280);
-    }
-  });
-
-  grid.addEventListener("pointermove", (event) => {
-    if (!pointerStart) return;
-    const distance = Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y);
-    if (!selectionActive) {
-      if (distance > 8) {
-        window.clearTimeout(selectionTimer);
-        pointerStart = undefined;
-      }
-      return;
-    }
-    const cell = cellAtPoint(event.clientX, event.clientY);
-    if (!cell) return;
-    selectionEndIndex = Number(cell.dataset.index);
-    if (selectionEndIndex !== selectionStartIndex || distance > 5) {
-      event.preventDefault();
-      previewSeason(selectionStartIndex, selectionEndIndex);
-    }
   });
 
   grid.addEventListener("pointerup", (event) => {
-    window.clearTimeout(selectionTimer);
     if (!pointerStart) return;
     const distance = Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y);
-    const madeSelection = selectionActive && (selectionEndIndex !== selectionStartIndex || distance > 5);
     pointerStart = undefined;
-    selectionActive = false;
-    if (madeSelection) {
-      openSeasonSelection(selectionStartIndex, selectionEndIndex);
-      return;
-    }
-    clearSeasonPreview();
+    if (distance > 10) return;
     const directCell = cellAtPoint(event.clientX, event.clientY);
     if (directCell?.classList.contains("season") && !directCell.classList.contains("marked")) {
       selectSeason(directCell);
@@ -755,10 +614,7 @@
   });
 
   grid.addEventListener("pointercancel", () => {
-    window.clearTimeout(selectionTimer);
     pointerStart = undefined;
-    selectionActive = false;
-    clearSeasonPreview();
   });
 
   document.querySelector("#add-moment").addEventListener("click", () => {
@@ -772,6 +628,17 @@
     window.setTimeout(() => dateInput.focus(), 50);
   });
 
+  document.querySelector("#add-season").addEventListener("click", () => {
+    const today = todayString();
+    seasonStartInput.value = today;
+    seasonEndInput.value = today;
+    setDateWheel(seasonStartInput);
+    setDateWheel(seasonEndInput);
+    seasonLabelInput.value = "";
+    pendingSeasonColor = undefined;
+    seasonDialog.showModal();
+  });
+
   document.querySelector("#scroll-seasons").addEventListener("click", () => {
     document.querySelector(".season-index").scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -780,86 +647,6 @@
     const portraitButton = event.target.closest(".portrait-button");
     if (portraitButton) openPortraitEditor(portraitButton.dataset.portrait);
   });
-
-  calendarMap.addEventListener("wheel", (event) => {
-    if (!event.ctrlKey && !event.metaKey) return;
-    event.preventDefault();
-    const bounds = calendarMap.getBoundingClientRect();
-    const x = event.clientX - bounds.left;
-    const y = event.clientY - bounds.top;
-    updateCalendarScale(calendarScale * Math.exp(-event.deltaY * 0.006), false, {
-      x,
-      y,
-      contentX: (calendarMap.scrollLeft + x) / calendarScale,
-      contentY: (calendarMap.scrollTop + y) / calendarScale,
-    });
-  }, { passive: false });
-  calendarMap.addEventListener("scroll", () => {
-    if (mapDrawFrame) return;
-    mapDrawFrame = window.requestAnimationFrame(() => {
-      mapDrawFrame = undefined;
-      drawLifeLines();
-    });
-  }, { passive: true });
-
-  calendarMap.addEventListener("pointerdown", (event) => {
-    if (event.pointerType !== "touch") return;
-    mapPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    calendarMap.setPointerCapture(event.pointerId);
-    if (mapPointers.size === 2) {
-      const [first, second] = [...mapPointers.values()];
-      const bounds = calendarMap.getBoundingClientRect();
-      const x = (first.x + second.x) / 2 - bounds.left;
-      const y = (first.y + second.y) / 2 - bounds.top;
-      pinchStart = {
-        distance: Math.hypot(second.x - first.x, second.y - first.y),
-        scale: calendarScale,
-        contentX: (calendarMap.scrollLeft + x) / calendarScale,
-        contentY: (calendarMap.scrollTop + y) / calendarScale,
-      };
-      window.clearTimeout(selectionTimer);
-      pointerStart = undefined;
-      selectionActive = false;
-      clearSeasonPreview();
-    }
-  });
-
-  calendarMap.addEventListener("pointermove", (event) => {
-    const previous = mapPointers.get(event.pointerId);
-    if (!previous) return;
-    mapPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    if (mapPointers.size === 2 && pinchStart) {
-      event.preventDefault();
-      const [first, second] = [...mapPointers.values()];
-      const bounds = calendarMap.getBoundingClientRect();
-      const x = (first.x + second.x) / 2 - bounds.left;
-      const y = (first.y + second.y) / 2 - bounds.top;
-      const distance = Math.hypot(second.x - first.x, second.y - first.y);
-      updateCalendarScale(pinchStart.scale * (distance / pinchStart.distance), false, {
-        x, y, contentX: pinchStart.contentX, contentY: pinchStart.contentY,
-      });
-      return;
-    }
-    if (mapPointers.size === 1 && !grid.querySelector(".season-preview")) {
-      const deltaX = event.clientX - previous.x;
-      const deltaY = event.clientY - previous.y;
-      if (Math.abs(deltaX) + Math.abs(deltaY) < 2) return;
-      event.preventDefault();
-      if (calendarScale > 1.01) {
-        calendarMap.scrollLeft -= deltaX;
-        calendarMap.scrollTop -= deltaY;
-      } else {
-        window.scrollBy(0, -deltaY);
-      }
-    }
-  });
-
-  function releaseMapPointer(event) {
-    mapPointers.delete(event.pointerId);
-    if (mapPointers.size < 2) pinchStart = undefined;
-  }
-  calendarMap.addEventListener("pointerup", releaseMapPointer);
-  calendarMap.addEventListener("pointercancel", releaseMapPointer);
 
   document.querySelector("#close-dialog").addEventListener("click", () => dialog.close());
   document.querySelector("#close-season-dialog").addEventListener("click", () => seasonDialog.close());
@@ -914,6 +701,8 @@
 
   seasonForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    syncDateWheel(document.querySelector('[data-date-wheel="season-start"]'));
+    syncDateWheel(document.querySelector('[data-date-wheel="season-end"]'));
     const start = seasonStartInput.value;
     const end = seasonEndInput.value;
     const label = seasonLabelInput.value.trim();
@@ -959,15 +748,12 @@
   renderMoments();
   loadPortraits();
   updateCounter();
-  window.requestAnimationFrame(() => {
-    prepareCalendarMap();
-    drawLifeLines();
-  });
+  window.requestAnimationFrame(drawLifeLines);
   setInterval(updateCounter, 1000);
   setInterval(updateCalendar, 60000);
-  window.addEventListener("resize", () => window.requestAnimationFrame(prepareCalendarMap));
-  window.addEventListener("load", () => window.requestAnimationFrame(prepareCalendarMap));
-  document.fonts?.ready.then(() => window.requestAnimationFrame(prepareCalendarMap));
+  window.addEventListener("resize", () => window.requestAnimationFrame(drawLifeLines));
+  window.addEventListener("load", () => window.requestAnimationFrame(drawLifeLines));
+  document.fonts?.ready.then(() => window.requestAnimationFrame(drawLifeLines));
 
   if (new URLSearchParams(location.search).has("date")) {
     history.replaceState(null, "", `${location.pathname}${location.hash}`);

@@ -138,10 +138,9 @@ h1 {
   position: relative;
   width: calc(100% + var(--ruler-width) / 2);
   margin-left: calc(var(--ruler-width) / -4);
-  overflow: auto;
-  overscroll-behavior: contain;
+  overflow: visible;
   scrollbar-width: none;
-  touch-action: none;
+  touch-action: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -155,10 +154,8 @@ h1 {
 .calendar {
   width: 100%;
   margin-left: 0;
-  zoom: var(--calendar-layout-scale, 1);
-  transform: scale(var(--calendar-preview-scale, 1));
-  transform-origin: top left;
-  will-change: transform;
+  zoom: 1;
+  transform: none;
 }
 
 .calendar-head,
@@ -285,9 +282,13 @@ h1 {
   box-shadow: 0 1px 4px rgb(26 23 19 / 20%);
 }
 
+.week.delete-anchor {
+  z-index: 50;
+}
+
 .delete-season-tag {
   position: absolute;
-  z-index: 8;
+  z-index: 60;
   top: 50%;
   left: calc(100% + 5px);
   width: max-content;
@@ -371,7 +372,14 @@ h1 {
   padding-top: 11px;
 }
 
-.add-moment {
+.moment-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-moment,
+.add-season {
   display: grid;
   width: 28px;
   height: 28px;
@@ -390,7 +398,35 @@ h1 {
   font: 350 19px/1 "Inter", sans-serif;
 }
 
-.add-moment:active {
+.add-season {
+  font: inherit;
+}
+
+.season-symbol {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 1px;
+  background: var(--together);
+}
+
+.season-symbol::before,
+.season-symbol::after {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--together);
+  content: "";
+  transform: translateY(-50%);
+}
+
+.season-symbol::before { left: -1px; }
+.season-symbol::after { right: -1px; }
+
+.add-moment:active,
+.add-season:active {
   background: rgb(26 23 19 / 7%);
 }
 
