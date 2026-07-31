@@ -6,6 +6,22 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Crimson Text";
+  src: url("./crimson-regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Crimson Text";
+  src: url("./crimson-semibold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
 :root {
   --paper: #f5f5f5;
   --ink: #1a1713;
@@ -31,12 +47,15 @@ body {
 body {
   min-height: 100dvh;
   color: var(--ink);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
 }
 
 .memore {
+  position: relative;
+  isolation: isolate;
   width: min(100%, 1160px);
   min-height: 100dvh;
   margin: 0 auto;
@@ -46,14 +65,36 @@ body {
     max(10px, env(safe-area-inset-bottom));
 }
 
+#life-lines {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.header,
+.calendar,
+.counter,
+.moments {
+  position: relative;
+  z-index: 1;
+}
+
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding-bottom: 14px;
 }
 
 .portraits {
   display: flex;
+  align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  flex: none;
 }
 
 .portraits img {
@@ -65,21 +106,59 @@ body {
   border: 0;
 }
 
+.portrait-button {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.portrait-button:active {
+  opacity: 0.72;
+}
+
 h1 {
-  width: 100%;
+  width: auto;
   margin: 0;
-  color: var(--ink);
-  font-size: 29px;
-  font-weight: 650;
-  font-stretch: expanded;
-  line-height: 1.12;
-  letter-spacing: 0.4px;
+  color: rgb(26 23 19 / 62%);
+  font-family: "Inter", -apple-system, sans-serif;
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 450;
+  line-height: 1;
+  letter-spacing: 0.25px;
+  text-align: right;
   white-space: nowrap;
 }
 
-.calendar {
+.calendar-map {
+  position: relative;
   width: calc(100% + var(--ruler-width) / 2);
-  margin-left: calc(var(--ruler-width) / -2);
+  margin-left: calc(var(--ruler-width) / -4);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  touch-action: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.calendar-map::-webkit-scrollbar { display: none; }
+
+.calendar-space {
+  position: relative;
+  min-width: 100%;
+}
+
+.calendar {
+  width: 100%;
+  margin-left: 0;
+  zoom: var(--calendar-layout-scale, 1);
+  transform: scale(var(--calendar-preview-scale, 1));
+  transform-origin: top left;
+  will-change: transform;
 }
 
 .calendar-head,
@@ -160,15 +239,19 @@ h1 {
   display: grid;
   grid-template-columns: repeat(52, minmax(0, 1fr));
   gap: var(--gap);
+  touch-action: auto;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .week {
+  position: relative;
   aspect-ratio: 1;
   min-width: 0;
   border: 0.65px solid rgb(0 0 0 / 13%);
   border-radius: 1.5px;
   background: var(--paper);
-  transition: background-color 140ms ease, border-color 140ms ease;
+  transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
 }
 
 .week.completed {
@@ -176,9 +259,63 @@ h1 {
   background: var(--together);
 }
 
-.week.milestone {
-  outline: 1.15px solid rgb(255 255 255 / 95%);
-  outline-offset: -1.65px;
+.week.marked {
+  transform: none;
+}
+
+.week.season {
+  z-index: 1;
+  border-color: transparent;
+  border-radius: 1.5px;
+  background: var(--season-color, #747774);
+  box-shadow: none;
+}
+
+.week.season-preview {
+  z-index: 2;
+  border-color: transparent;
+  border-radius: 1.5px;
+  background: var(--season-preview-color, #747774);
+  box-shadow: none;
+}
+
+.week.season-selected {
+  z-index: 5;
+  transform: scale(1.16);
+  box-shadow: 0 1px 4px rgb(26 23 19 / 20%);
+}
+
+.delete-season-tag {
+  position: absolute;
+  z-index: 8;
+  top: 50%;
+  left: calc(100% + 5px);
+  width: max-content;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 0 2px 10px rgb(26 23 19 / 18%);
+  color: rgb(26 23 19 / 66%);
+  font: 600 6px/1 "Inter", sans-serif;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.week.marked::after {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: 42%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 0.45px rgb(26 23 19 / 30%);
+  content: "";
+  transform: translate(-50%, -50%);
 }
 
 .year-ruler {
@@ -222,8 +359,399 @@ h1 {
   align-items: flex-start;
   justify-content: center;
   gap: 7px;
-  padding-top: 8px;
+  padding-top: 13px;
   color: rgb(26 23 19 / 78%);
+}
+
+.moments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 11px;
+}
+
+.add-moment {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgb(26 23 19 / 34%);
+  border-radius: 50%;
+  background: transparent;
+  color: rgb(26 23 19 / 68%);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.add-moment {
+  padding: 0 0 2px;
+  font: 350 19px/1 "Inter", sans-serif;
+}
+
+.add-moment:active {
+  background: rgb(26 23 19 / 7%);
+}
+
+.moment-note {
+  max-width: 280px;
+  margin: 0;
+  color: rgb(26 23 19 / 58%);
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 10px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.moment-dialog {
+  width: min(calc(100% - 40px), 350px);
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 18px 60px rgb(26 23 19 / 18%);
+}
+
+.moment-dialog::backdrop {
+  background: rgb(26 23 19 / 28%);
+  backdrop-filter: blur(2px);
+}
+
+.moment-dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+}
+
+.dialog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.dialog-heading h2 {
+  margin: 0;
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.dialog-heading button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(26 23 19 / 54%);
+  font: 300 21px/1 "Inter", sans-serif;
+  cursor: pointer;
+}
+
+.moment-dialog label {
+  margin-top: 4px;
+  color: rgb(26 23 19 / 52%);
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+}
+
+.moment-dialog label span {
+  font-weight: 450;
+  opacity: 0.65;
+}
+
+.season-range {
+  margin: 0 0 5px;
+  color: rgb(26 23 19 / 54%);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2px;
+}
+
+.moment-dialog input {
+  width: 100%;
+  padding: 10px 0 8px;
+  border: 0;
+  border-bottom: 1px solid rgb(26 23 19 / 22%);
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 400 13px/1.3 "Inter", sans-serif;
+}
+
+.moment-dialog input:focus {
+  border-bottom-color: rgb(26 23 19 / 72%);
+}
+
+.moment-dialog input::placeholder {
+  color: rgb(26 23 19 / 28%);
+}
+
+.moment-dialog input[type="file"] {
+  padding: 8px 0;
+  color: rgb(26 23 19 / 56%);
+  font-size: 10px;
+}
+
+.moment-dialog input[type="file"]::file-selector-button {
+  margin-right: 9px;
+  padding: 6px 9px;
+  border: 1px solid rgb(26 23 19 / 22%);
+  border-radius: 2px;
+  background: transparent;
+  color: rgb(26 23 19 / 68%);
+  font: 550 9px/1 "Inter", sans-serif;
+}
+
+.date-wheel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 15px 84px;
+  column-gap: 15px;
+  align-self: center;
+  width: min(100%, 255px);
+  margin: 2px auto 8px;
+}
+
+.date-wheel-label {
+  color: rgb(26 23 19 / 34%);
+  font: 600 7px/1 "Inter", sans-serif;
+  letter-spacing: 0.65px;
+  text-align: center;
+}
+
+.date-wheel-field {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(3, 28px);
+  align-items: center;
+  min-width: 0;
+  height: 84px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 450 16px/28px "Inter", sans-serif;
+  font-variant-numeric: tabular-nums;
+  cursor: ns-resize;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.date-wheel-field::before,
+.date-wheel-field::after {
+  position: absolute;
+  z-index: 2;
+  right: 2px;
+  left: 2px;
+  height: 1px;
+  background: rgb(26 23 19 / 10%);
+  content: "";
+}
+
+.date-wheel-field::before { top: 27px; }
+.date-wheel-field::after { bottom: 27px; }
+
+.date-wheel-value {
+  color: rgb(26 23 19 / 20%);
+  pointer-events: none;
+}
+
+.date-wheel-value.current {
+  color: rgb(26 23 19 / 86%);
+  font-weight: 550;
+}
+
+.date-wheel-field:focus-visible {
+  background: rgb(26 23 19 / 3%);
+}
+
+.season-index {
+  width: min(100%, 360px);
+  margin-top: clamp(76px, 12dvh, 112px);
+  padding-bottom: 20px;
+  scroll-margin-top: 22px;
+}
+
+.scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 4px 10px;
+  border: 0;
+  background: transparent;
+  color: rgb(26 23 19 / 30%);
+  font: 550 6px/1 "Inter", sans-serif;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.scroll-cue i {
+  font-size: 11px;
+  font-style: normal;
+  animation: scroll-hint 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); opacity: 0.45; }
+  50% { transform: translateY(4px); opacity: 0.8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue i { animation: none; }
+  .season-quotes { transition: none; }
+}
+
+.season-index h2 {
+  margin: 0 0 8px;
+  color: rgb(26 23 19 / 42%);
+  font: 600 7px/1 "Inter", sans-serif;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.season-entry {
+  border-top: 1px solid rgb(26 23 19 / 10%);
+}
+
+.season-entry:last-child {
+  border-bottom: 1px solid rgb(26 23 19 / 10%);
+}
+
+.season-title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  padding: 11px 2px;
+  border: 0;
+  background: transparent;
+  color: rgb(26 23 19 / 76%);
+  font: 500 11px/1.2 "Inter", sans-serif;
+  text-align: left;
+  cursor: pointer;
+  transition: color 220ms ease, padding 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.season-entry.open .season-title {
+  padding-top: 14px;
+  color: var(--ink);
+}
+
+.season-swatch {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--season-color);
+}
+
+.season-title::after {
+  margin-left: auto;
+  color: rgb(26 23 19 / 32%);
+  content: "+";
+}
+
+.season-entry.open .season-title::after { content: "−"; }
+
+.season-quotes {
+  max-height: 0;
+  padding: 0 2px 0 17px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition:
+    max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding-bottom 320ms ease;
+}
+
+.season-entry.open .season-quotes {
+  max-height: 65dvh;
+  padding-bottom: 10px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.season-quote {
+  margin: 0;
+  padding: 7px 0;
+  color: rgb(26 23 19 / 66%);
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.season-quote time {
+  display: block;
+  margin-bottom: 2px;
+  color: rgb(26 23 19 / 36%);
+  font-family: "Inter", sans-serif;
+  font-size: 7px;
+  letter-spacing: 0.25px;
+}
+
+
+.save-moment {
+  display: grid;
+  align-self: center;
+  width: 34px;
+  height: 34px;
+  margin-top: 12px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--together);
+  color: var(--paper);
+  font: 600 15px/1 "Inter", sans-serif;
+  cursor: pointer;
+}
+
+.detail-dialog {
+  padding: 22px;
+}
+
+.detail-dialog .dialog-heading {
+  margin: 0 0 14px;
+}
+
+.detail-dialog time {
+  color: rgb(26 23 19 / 48%);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.35px;
+}
+
+.detail-dialog img {
+  display: block;
+  width: 100%;
+  max-height: min(48dvh, 360px);
+  margin-bottom: 15px;
+  object-fit: contain;
+  background: rgb(26 23 19 / 4%);
+}
+
+.detail-dialog img[hidden] {
+  display: none;
+}
+
+.detail-dialog p {
+  margin: 0;
+  color: rgb(26 23 19 / 76%);
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
 .counter div {
@@ -235,7 +763,8 @@ h1 {
 
 .counter strong,
 .counter > span {
-  font-size: 16px;
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 18px;
   font-variant-numeric: tabular-nums;
   font-weight: 450;
   line-height: 1;
@@ -243,7 +772,7 @@ h1 {
 
 .counter > span {
   color: rgb(26 23 19 / 38%);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .counter small {
@@ -270,7 +799,6 @@ h1 {
 
   .portraits {
     gap: 12px;
-    margin-bottom: 14px;
   }
 
   .portraits img {
@@ -279,8 +807,8 @@ h1 {
   }
 
   h1 {
-    font-size: 42px;
-    letter-spacing: 0.8px;
+    font-size: 14px;
+    letter-spacing: 0.3px;
   }
 
   .calendar-head {
@@ -299,7 +827,7 @@ h1 {
 
   .counter {
     gap: 11px;
-    padding-top: 13px;
+    padding-top: 18px;
   }
 
   .counter div {
@@ -307,15 +835,19 @@ h1 {
   }
 
   .counter strong {
-    font-size: 20px;
+    font-size: 23px;
   }
 
   .counter > span {
-    font-size: 18px;
+    font-size: 21px;
   }
 
   .counter small {
     font-size: 8px;
+  }
+
+  .moments {
+    padding-top: 14px;
   }
 }
 
@@ -329,16 +861,12 @@ h1 {
     height: 46px;
   }
 
-  .portraits {
-    margin-bottom: 7px;
-  }
-
   .header {
     padding-bottom: 9px;
   }
 
   h1 {
-    font-size: 26px;
+    font-size: 28px;
   }
 
   .calendar-head {
@@ -350,6 +878,10 @@ h1 {
   }
 
   .counter {
-    padding-top: 5px;
+    padding-top: 8px;
+  }
+
+  .moments {
+    padding-top: 6px;
   }
 }

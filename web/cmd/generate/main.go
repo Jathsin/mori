@@ -33,6 +33,8 @@ func main() {
 		"app.js",
 		"htmx.min.js",
 		"inter.ttf",
+		"crimson-regular.ttf",
+		"crimson-semibold.ttf",
 		"gael.jpeg",
 		"juanmi.png",
 		"icon.svg",

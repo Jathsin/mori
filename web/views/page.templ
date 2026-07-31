@@ -5,32 +5,17 @@ import (
 	"time"
 )
 
-var milestoneDates = map[string]bool{
-	"2005-01-15": true,
-	"2005-05-26": true,
-	"2024-11-14": true,
-	"2026-06-01": true,
-}
-
 func weekStart(index int) time.Time {
 	start := time.Date(2005, time.January, 15, 0, 0, 0, 0, time.UTC)
 	return start.AddDate(0, 0, index*7)
 }
 
-func isMilestoneWeek(index int) bool {
-	start := weekStart(index)
-	end := start.AddDate(0, 0, 7)
-	for date := range milestoneDates {
-		value, err := time.Parse("2006-01-02", date)
-		if err == nil && !value.Before(start) && value.Before(end) {
-			return true
-		}
-	}
-	return false
-}
-
 func weekLabel(index int) string {
 	return weekStart(index).Format("2 Jan 2006")
+}
+
+func calendarEnd() string {
+	return weekStart(90*52 - 1).AddDate(0, 0, 6).Format("2006-01-02")
 }
 
 func weekTicks() []int {
@@ -49,6 +34,17 @@ func yearTicks() []int {
 	return values
 }
 
+templ DateWheel(name string) {
+	<div class="date-wheel" data-date-wheel={ name }>
+		<span class="date-wheel-label">DÍA</span>
+		<span class="date-wheel-label">MES</span>
+		<span class="date-wheel-label">AÑO</span>
+		<button class="date-wheel-field date-wheel-day" type="button" data-unit="day" data-min="1" data-max="31" aria-label="Día"></button>
+		<button class="date-wheel-field date-wheel-month" type="button" data-unit="month" data-min="1" data-max="12" aria-label="Mes"></button>
+		<button class="date-wheel-field date-wheel-year" type="button" data-unit="year" data-min="2005" data-max="2094" aria-label="Año"></button>
+	</div>
+}
+
 templ Page() {
 	<!doctype html>
 	<html lang="es">
@@ -64,21 +60,28 @@ templ Page() {
 			<link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
 			<link rel="apple-touch-icon" href="./assets/icon.png"/>
 			<link rel="manifest" href="./assets/manifest.webmanifest"/>
-			<link rel="stylesheet" href="./assets/app.css"/>
+			<link rel="stylesheet" href="./assets/app.css?v=7"/>
 			<script src="./assets/htmx.min.js" defer></script>
-			<script src="./assets/app.js" defer></script>
+			<script src="./assets/app.js?v=7" defer></script>
 		</head>
 		<body hx-boost="true">
 			<main class="memore" aria-label="Calendario de vida de Gael y Juanmi">
+				<canvas id="life-lines" aria-hidden="true"></canvas>
 				<header class="header">
 					<div class="portraits" aria-label="Gael y Juanmi">
-						<img src="./assets/gael.jpeg" alt="Retrato de Gael"/>
-						<img src="./assets/juanmi.png" alt="Retrato de Juanmi"/>
+						<button class="portrait-button" type="button" data-portrait="january" aria-label="Editar primer retrato">
+							<img id="portrait-january" data-birth-date="2005-01-15" src="./assets/juanmi.png" alt="Retrato asociado al 15 de enero de 2005"/>
+						</button>
+						<button class="portrait-button" type="button" data-portrait="may" aria-label="Editar segundo retrato">
+							<img id="portrait-may" data-birth-date="2005-05-26" src="./assets/gael.jpeg" alt="Retrato asociado al 26 de mayo de 2005"/>
+						</button>
 					</div>
-					<h1>Memento amare</h1>
+					<h1>“Memento amare”</h1>
 				</header>
 
-				<section class="calendar" aria-label="Calendario de 90 años">
+				<div id="calendar-map" class="calendar-map">
+					<div id="calendar-space" class="calendar-space">
+					<section id="calendar-stage" class="calendar" aria-label="Calendario de 90 años">
 					<div class="calendar-head">
 						<span class="year-heading">AÑO</span>
 						<div class="week-ruler">
@@ -108,7 +111,8 @@ templ Page() {
 						<div class="weeks" id="life-grid">
 							for index := 0; index < 90*52; index++ {
 								<span
-									class={ "week", templ.KV("milestone", isMilestoneWeek(index)) }
+									class="week"
+									data-index={ fmt.Sprint(index) }
 									data-start={ weekStart(index).Format("2006-01-02") }
 									title={ weekLabel(index) }
 									aria-label={ weekLabel(index) }
@@ -116,7 +120,9 @@ templ Page() {
 							}
 						</div>
 					</div>
-				</section>
+					</section>
+					</div>
+				</div>
 
 				<footer class="counter" aria-label="Tiempo juntos desde el 14 de noviembre de 2024">
 					<div><strong id="days">000</strong><small>DÍAS</small></div>
@@ -127,7 +133,79 @@ templ Page() {
 					<span>:</span>
 					<div><strong id="seconds">00</strong><small>SEG</small></div>
 				</footer>
+
+				<section class="moments" aria-label="Momentos de tu vida">
+					<button id="add-moment" class="add-moment" type="button" aria-label="Añadir un momento">+</button>
+					<p id="moment-note" class="moment-note" aria-live="polite" hidden></p>
+					<button id="scroll-seasons" class="scroll-cue" type="button" aria-label="Deslizar hasta las temporadas"><span>Desliza</span><i>↓</i></button>
+					<section class="season-index" aria-label="Temporadas guardadas">
+						<h2>Temporadas</h2>
+						<div id="season-list"></div>
+					</section>
+				</section>
 			</main>
+
+			<dialog id="moment-dialog" class="moment-dialog">
+				<form id="moment-form" method="dialog" hx-boost="false">
+					<div class="dialog-heading">
+						<h2>Añadir momento</h2>
+						<button id="close-dialog" type="button" aria-label="Cerrar">×</button>
+					</div>
+					<input id="moment-date" name="date" type="hidden" min="2005-01-15" max={ calendarEnd() }/>
+					@DateWheel("moment-date")
+					<label for="moment-description">Breve descripción</label>
+					<input
+						id="moment-description"
+						name="description"
+						type="text"
+						maxlength="80"
+						placeholder="El comienzo de una nueva etapa"
+						required
+					/>
+					<label for="moment-image">Imagen <span>(opcional)</span></label>
+					<input id="moment-image" name="image" type="file" accept="image/*"/>
+					<button class="save-moment" type="submit" aria-label="Guardar">✓</button>
+				</form>
+			</dialog>
+
+			<dialog id="portrait-dialog" class="moment-dialog">
+				<form id="portrait-form" method="dialog" hx-boost="false">
+					<div class="dialog-heading">
+						<h2>Editar retrato</h2>
+						<button id="close-portrait-dialog" type="button" aria-label="Cerrar">×</button>
+					</div>
+					<input id="portrait-key" type="hidden"/>
+					<input id="portrait-date" type="hidden"/>
+					@DateWheel("portrait-date")
+					<label for="portrait-image">Retrato</label>
+					<input id="portrait-image" type="file" accept="image/*"/>
+					<button class="save-moment" type="submit" aria-label="Guardar">✓</button>
+				</form>
+			</dialog>
+
+			<dialog id="season-dialog" class="moment-dialog">
+				<form id="season-form" method="dialog" hx-boost="false">
+					<div class="dialog-heading">
+						<h2>Añadir temporada</h2>
+						<button id="close-season-dialog" type="button" aria-label="Cerrar">×</button>
+					</div>
+					<p id="season-range" class="season-range"></p>
+					<input id="season-start" name="start" type="hidden"/>
+					<input id="season-end" name="end" type="hidden"/>
+					<label for="season-label">Nombre</label>
+					<input id="season-label" name="label" type="text" maxlength="36" placeholder="Una nueva temporada" required/>
+					<button class="save-moment" type="submit" aria-label="Guardar">✓</button>
+				</form>
+			</dialog>
+
+			<dialog id="moment-detail" class="moment-dialog detail-dialog">
+				<div class="dialog-heading">
+					<time id="detail-date"></time>
+					<button id="close-detail" type="button" aria-label="Cerrar">×</button>
+				</div>
+				<img id="detail-image" alt="Imagen guardada para este momento" hidden/>
+				<p id="detail-description"></p>
+			</dialog>
 		</body>
 	</html>
 }

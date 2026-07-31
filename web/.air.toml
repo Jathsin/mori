@@ -3,11 +3,11 @@ tmp_dir = "tmp"
 
 [build]
   bin = "./tmp/memore"
-  cmd = "\"$(go env GOPATH)/bin/templ\" generate && go run ./cmd/generate && go build -o ./tmp/memore ./cmd/dev"
+  cmd = "sh ./scripts/build-dev.sh"
   delay = 300
   exclude_dir = ["dist", "tmp", "vendor", ".git"]
   exclude_regex = [".*_templ.go", "_test.go"]
-  include_ext = ["go", "templ", "css", "js", "json", "webmanifest", "svg"]
+  include_ext = ["go", "templ", "css", "js", "json", "webmanifest", "svg", "png", "jpg", "jpeg", "ttf"]
   kill_delay = "200ms"
   send_interrupt = true
   stop_on_error = true

@@ -13,32 +13,17 @@ import (
 	"time"
 )
 
-var milestoneDates = map[string]bool{
-	"2005-01-15": true,
-	"2005-05-26": true,
-	"2024-11-14": true,
-	"2026-06-01": true,
-}
-
 func weekStart(index int) time.Time {
 	start := time.Date(2005, time.January, 15, 0, 0, 0, 0, time.UTC)
 	return start.AddDate(0, 0, index*7)
 }
 
-func isMilestoneWeek(index int) bool {
-	start := weekStart(index)
-	end := start.AddDate(0, 0, 7)
-	for date := range milestoneDates {
-		value, err := time.Parse("2006-01-02", date)
-		if err == nil && !value.Before(start) && value.Before(end) {
-			return true
-		}
-	}
-	return false
-}
-
 func weekLabel(index int) string {
 	return weekStart(index).Format("2 Jan 2006")
+}
+
+func calendarEnd() string {
+	return weekStart(90*52-1).AddDate(0, 0, 6).Format("2006-01-02")
 }
 
 func weekTicks() []int {
@@ -57,7 +42,7 @@ func yearTicks() []int {
 	return values
 }
 
-func Page() templ.Component {
+func DateWheel(name string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -78,145 +63,159 @@ func Page() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\"><meta name=\"theme-color\" content=\"#f5f5f5\"><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\"><meta name=\"apple-mobile-web-app-title\" content=\"Memore\"><meta name=\"description\" content=\"Un calendario de nuestras vidas.\"><title>Memore</title><link rel=\"icon\" href=\"./assets/icon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./assets/icon.png\"><link rel=\"manifest\" href=\"./assets/manifest.webmanifest\"><link rel=\"stylesheet\" href=\"./assets/app.css\"><script src=\"./assets/htmx.min.js\" defer></script><script src=\"./assets/app.js\" defer></script></head><body hx-boost=\"true\"><main class=\"memore\" aria-label=\"Calendario de vida de Gael y Juanmi\"><header class=\"header\"><div class=\"portraits\" aria-label=\"Gael y Juanmi\"><img src=\"./assets/gael.jpeg\" alt=\"Retrato de Gael\"> <img src=\"./assets/juanmi.png\" alt=\"Retrato de Juanmi\"></div><h1>Memento amare</h1></header><section class=\"calendar\" aria-label=\"Calendario de 90 años\"><div class=\"calendar-head\"><span class=\"year-heading\">AÑO</span><div class=\"week-ruler\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"date-wheel\" data-date-wheel=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 38, Col: 47}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><span class=\"date-wheel-label\">DÍA</span> <span class=\"date-wheel-label\">MES</span> <span class=\"date-wheel-label\">AÑO</span> <button class=\"date-wheel-field date-wheel-day\" type=\"button\" data-unit=\"day\" data-min=\"1\" data-max=\"31\" aria-label=\"Día\"></button> <button class=\"date-wheel-field date-wheel-month\" type=\"button\" data-unit=\"month\" data-min=\"1\" data-max=\"12\" aria-label=\"Mes\"></button> <button class=\"date-wheel-field date-wheel-year\" type=\"button\" data-unit=\"year\" data-min=\"2005\" data-max=\"2094\" aria-label=\"Año\"></button></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func Page() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\"><meta name=\"theme-color\" content=\"#f5f5f5\"><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\"><meta name=\"apple-mobile-web-app-title\" content=\"Memore\"><meta name=\"description\" content=\"Un calendario de nuestras vidas.\"><title>Memore</title><link rel=\"icon\" href=\"./assets/icon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" href=\"./assets/icon.png\"><link rel=\"manifest\" href=\"./assets/manifest.webmanifest\"><link rel=\"stylesheet\" href=\"./assets/app.css?v=7\"><script src=\"./assets/htmx.min.js\" defer></script><script src=\"./assets/app.js?v=7\" defer></script></head><body hx-boost=\"true\"><main class=\"memore\" aria-label=\"Calendario de vida de Gael y Juanmi\"><canvas id=\"life-lines\" aria-hidden=\"true\"></canvas><header class=\"header\"><div class=\"portraits\" aria-label=\"Gael y Juanmi\"><button class=\"portrait-button\" type=\"button\" data-portrait=\"january\" aria-label=\"Editar primer retrato\"><img id=\"portrait-january\" data-birth-date=\"2005-01-15\" src=\"./assets/juanmi.png\" alt=\"Retrato asociado al 15 de enero de 2005\"></button> <button class=\"portrait-button\" type=\"button\" data-portrait=\"may\" aria-label=\"Editar segundo retrato\"><img id=\"portrait-may\" data-birth-date=\"2005-05-26\" src=\"./assets/gael.jpeg\" alt=\"Retrato asociado al 26 de mayo de 2005\"></button></div><h1>“Memento amare”</h1></header><div id=\"calendar-map\" class=\"calendar-map\"><div id=\"calendar-space\" class=\"calendar-space\"><section id=\"calendar-stage\" class=\"calendar\" aria-label=\"Calendario de 90 años\"><div class=\"calendar-head\"><span class=\"year-heading\">AÑO</span><div class=\"week-ruler\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, week := range weekTicks() {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span class=\"week-number\" style=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span class=\"week-number\" style=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--week:%d", week))
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--week:%d", week))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 86, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 89, Col: 72}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(week))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 86, Col: 93}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span> ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<span class=\"week-heading\">SEMANA</span><div class=\"week-marks\" aria-hidden=\"true\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		for week := 1; week <= 52; week++ {
-			var templ_7745c5c3_Var4 = []any{templ.KV("major", week == 1 || week%5 == 0)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<i class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var4).String())
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(week))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 1, Col: 0}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 89, Col: 93}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\"></i>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div></div></div><div class=\"calendar-body\"><div class=\"year-ruler\" aria-hidden=\"true\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<span class=\"week-heading\">SEMANA</span><div class=\"week-marks\" aria-hidden=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, year := range yearTicks() {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<span class=\"year-number\" style=\"")
+		for week := 1; week <= 52; week++ {
+			var templ_7745c5c3_Var6 = []any{templ.KV("major", week == 1 || week%5 == 0)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--year:%d", year))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 100, Col: 72}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<i class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(year))
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var6).String())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 100, Col: 93}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 1, Col: 0}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"></i>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"year-marks\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></div></div><div class=\"calendar-body\"><div class=\"year-ruler\" aria-hidden=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for year := 1; year <= 90; year++ {
-			var templ_7745c5c3_Var8 = []any{templ.KV("major", year == 1 || year%5 == 0)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var8...)
+		for _, year := range yearTicks() {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"year-number\" style=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<i class=\"")
+			var templ_7745c5c3_Var8 string
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--year:%d", year))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 103, Col: 72}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var8).String())
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(year))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 1, Col: 0}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 103, Col: 93}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\"></i>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div></div><div class=\"weeks\" id=\"life-grid\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"year-marks\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for index := 0; index < 90*52; index++ {
-			var templ_7745c5c3_Var10 = []any{"week", templ.KV("milestone", isMilestoneWeek(index))}
+		for year := 1; year <= 90; year++ {
+			var templ_7745c5c3_Var10 = []any{templ.KV("major", year == 1 || year%5 == 0)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var10...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<span class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<i class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -229,51 +228,103 @@ func Page() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" data-start=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"></i>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div></div><div class=\"weeks\" id=\"life-grid\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		for index := 0; index < 90*52; index++ {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<span class=\"week\" data-index=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(weekStart(index).Format("2006-01-02"))
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 112, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 115, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\" title=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\" data-start=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(weekLabel(index))
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(weekStart(index).Format("2006-01-02"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 113, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 116, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\" aria-label=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" title=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(weekLabel(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 114, Col: 38}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 117, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\"></span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" aria-label=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var15 string
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(weekLabel(index))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 118, Col: 38}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\"></span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div></div></section><footer class=\"counter\" aria-label=\"Tiempo juntos desde el 14 de noviembre de 2024\"><div><strong id=\"days\">000</strong><small>DÍAS</small></div><span>:</span><div><strong id=\"hours\">00</strong><small>HRS</small></div><span>:</span><div><strong id=\"minutes\">00</strong><small>MIN</small></div><span>:</span><div><strong id=\"seconds\">00</strong><small>SEG</small></div></footer></main></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div></div></section></div></div><footer class=\"counter\" aria-label=\"Tiempo juntos desde el 14 de noviembre de 2024\"><div><strong id=\"days\">000</strong><small>DÍAS</small></div><span>:</span><div><strong id=\"hours\">00</strong><small>HRS</small></div><span>:</span><div><strong id=\"minutes\">00</strong><small>MIN</small></div><span>:</span><div><strong id=\"seconds\">00</strong><small>SEG</small></div></footer><section class=\"moments\" aria-label=\"Momentos de tu vida\"><button id=\"add-moment\" class=\"add-moment\" type=\"button\" aria-label=\"Añadir un momento\">+</button><p id=\"moment-note\" class=\"moment-note\" aria-live=\"polite\" hidden></p><button id=\"scroll-seasons\" class=\"scroll-cue\" type=\"button\" aria-label=\"Deslizar hasta las temporadas\"><span>Desliza</span><i>↓</i></button><section class=\"season-index\" aria-label=\"Temporadas guardadas\"><h2>Temporadas</h2><div id=\"season-list\"></div></section></section></main><dialog id=\"moment-dialog\" class=\"moment-dialog\"><form id=\"moment-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir momento</h2><button id=\"close-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"moment-date\" name=\"date\" type=\"hidden\" min=\"2005-01-15\" max=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var16 string
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 154, Col: 91}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = DateWheel("moment-date").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<label for=\"moment-description\">Breve descripción</label> <input id=\"moment-description\" name=\"description\" type=\"text\" maxlength=\"80\" placeholder=\"El comienzo de una nueva etapa\" required> <label for=\"moment-image\">Imagen <span>(opcional)</span></label> <input id=\"moment-image\" name=\"image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"portrait-dialog\" class=\"moment-dialog\"><form id=\"portrait-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Editar retrato</h2><button id=\"close-portrait-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"portrait-key\" type=\"hidden\"> <input id=\"portrait-date\" type=\"hidden\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = DateWheel("portrait-date").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<label for=\"portrait-image\">Retrato</label> <input id=\"portrait-image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"season-dialog\" class=\"moment-dialog\"><form id=\"season-form\" method=\"dialog\" hx-boost=\"false\"><div class=\"dialog-heading\"><h2>Añadir temporada</h2><button id=\"close-season-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><p id=\"season-range\" class=\"season-range\"></p><input id=\"season-start\" name=\"start\" type=\"hidden\"> <input id=\"season-end\" name=\"end\" type=\"hidden\"> <label for=\"season-label\">Nombre</label> <input id=\"season-label\" name=\"label\" type=\"text\" maxlength=\"36\" placeholder=\"Una nueva temporada\" required> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"moment-detail\" class=\"moment-dialog detail-dialog\"><div class=\"dialog-heading\"><time id=\"detail-date\"></time> <button id=\"close-detail\" type=\"button\" aria-label=\"Cerrar\">×</button></div><img id=\"detail-image\" alt=\"Imagen guardada para este momento\" hidden><p id=\"detail-description\"></p></dialog></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
