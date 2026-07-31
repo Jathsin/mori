@@ -1,0 +1,355 @@
+@font-face {
+  font-family: "Inter";
+  src: url("./inter.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --paper: #f5f5f5;
+  --ink: #1a1713;
+  --together: #292927;
+  --ruler-width: 23px;
+  --gap: 1px;
+  color-scheme: light;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  background: var(--paper);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+}
+
+body {
+  min-height: 100dvh;
+  color: var(--ink);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+.memore {
+  width: min(100%, 1160px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(14px, env(safe-area-inset-top))
+    20px
+    max(10px, env(safe-area-inset-bottom));
+}
+
+.header {
+  padding-bottom: 14px;
+}
+
+.portraits {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.portraits img {
+  display: block;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 0;
+}
+
+h1 {
+  width: 100%;
+  margin: 0;
+  color: var(--ink);
+  font-size: 29px;
+  font-weight: 650;
+  font-stretch: expanded;
+  line-height: 1.12;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.calendar {
+  width: calc(100% + var(--ruler-width) / 2);
+  margin-left: calc(var(--ruler-width) / -2);
+}
+
+.calendar-head,
+.calendar-body {
+  display: grid;
+  grid-template-columns: var(--ruler-width) minmax(0, 1fr);
+}
+
+.calendar-head {
+  height: 32px;
+  margin-bottom: 4px;
+  align-items: end;
+}
+
+.year-heading,
+.week-heading {
+  color: rgb(26 23 19 / 48%);
+  font-size: 7px;
+  font-weight: 650;
+  letter-spacing: 0.7px;
+}
+
+.year-heading {
+  padding-bottom: 1px;
+  text-align: center;
+}
+
+.week-ruler {
+  position: relative;
+  height: 32px;
+}
+
+.week-number {
+  position: absolute;
+  top: 1px;
+  left: calc((var(--week) - 0.5) / 52 * 100%);
+  color: rgb(26 23 19 / 58%);
+  font-size: 6px;
+  font-weight: 450;
+  line-height: 1;
+  transform: translateX(-50%);
+}
+
+.week-heading {
+  position: absolute;
+  bottom: 9px;
+  left: 25px;
+  transform: translateX(-50%);
+}
+
+.week-marks {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  grid-template-columns: repeat(52, 1fr);
+  align-items: end;
+  height: 7px;
+}
+
+.week-marks i {
+  justify-self: center;
+  width: 0.5px;
+  height: 4px;
+  background: rgb(26 23 19 / 25%);
+}
+
+.week-marks i.major {
+  width: 0.8px;
+  height: 7px;
+  background: rgb(26 23 19 / 55%);
+}
+
+.calendar-body {
+  align-items: stretch;
+}
+
+.weeks {
+  display: grid;
+  grid-template-columns: repeat(52, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.week {
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 0.65px solid rgb(0 0 0 / 13%);
+  border-radius: 1.5px;
+  background: var(--paper);
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.week.completed {
+  border-color: transparent;
+  background: var(--together);
+}
+
+.week.milestone {
+  outline: 1.15px solid rgb(255 255 255 / 95%);
+  outline-offset: -1.65px;
+}
+
+.year-ruler {
+  position: relative;
+}
+
+.year-number {
+  position: absolute;
+  top: calc((var(--year) - 0.5) / 90 * 100%);
+  left: calc(50% - 2px);
+  color: rgb(26 23 19 / 58%);
+  font-size: 6px;
+  font-weight: 450;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+.year-marks {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: repeat(90, 1fr);
+}
+
+.year-marks i {
+  align-self: center;
+  justify-self: end;
+  width: 4px;
+  height: 0.5px;
+  background: rgb(26 23 19 / 25%);
+}
+
+.year-marks i.major {
+  width: 7px;
+  height: 0.8px;
+  background: rgb(26 23 19 / 55%);
+}
+
+.counter {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
+  padding-top: 8px;
+  color: rgb(26 23 19 / 78%);
+}
+
+.counter div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.counter strong,
+.counter > span {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 450;
+  line-height: 1;
+}
+
+.counter > span {
+  color: rgb(26 23 19 / 38%);
+  font-size: 14px;
+}
+
+.counter small {
+  color: rgb(26 23 19 / 42%);
+  font-size: 6px;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: 0.35px;
+}
+
+@media (min-width: 700px) {
+  :root {
+    --ruler-width: 34px;
+    --gap: 2px;
+  }
+
+  .memore {
+    padding: 34px 64px 24px;
+  }
+
+  .header {
+    padding-bottom: 24px;
+  }
+
+  .portraits {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .portraits img {
+    width: 66px;
+    height: 66px;
+  }
+
+  h1 {
+    font-size: 42px;
+    letter-spacing: 0.8px;
+  }
+
+  .calendar-head {
+    height: 38px;
+  }
+
+  .year-heading,
+  .week-heading {
+    font-size: 9px;
+  }
+
+  .week-number,
+  .year-number {
+    font-size: 8px;
+  }
+
+  .counter {
+    gap: 11px;
+    padding-top: 13px;
+  }
+
+  .counter div {
+    gap: 5px;
+  }
+
+  .counter strong {
+    font-size: 20px;
+  }
+
+  .counter > span {
+    font-size: 18px;
+  }
+
+  .counter small {
+    font-size: 8px;
+  }
+}
+
+@media (max-height: 760px) and (max-width: 699px) {
+  .memore {
+    padding-top: max(8px, env(safe-area-inset-top));
+  }
+
+  .portraits img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .portraits {
+    margin-bottom: 7px;
+  }
+
+  .header {
+    padding-bottom: 9px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .calendar-head {
+    height: 28px;
+  }
+
+  .week-ruler {
+    height: 28px;
+  }
+
+  .counter {
+    padding-top: 5px;
+  }
+}

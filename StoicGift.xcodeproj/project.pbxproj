@@ -1,0 +1,414 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* StoicGiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* StoicGiftApp.swift */; };
+		A10000000000000000000002 /* LifeCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* LifeCalendar.swift */; };
+		A10000000000000000000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* ContentView.swift */; };
+		A10000000000000000000004 /* AppFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* AppFonts.swift */; };
+		A10000000000000000000011 /* StoicGiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* StoicGiftApp.swift */; };
+		A10000000000000000000012 /* LifeCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* LifeCalendar.swift */; };
+		A10000000000000000000013 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* ContentView.swift */; };
+		A10000000000000000000014 /* AppFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* AppFonts.swift */; };
+		A10000000000000000000021 /* Gael.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* Gael.jpeg */; };
+		A10000000000000000000022 /* Juanmi.png in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* Juanmi.png */; };
+		A10000000000000000000023 /* UnicaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* UnicaOne-Regular.ttf */; };
+		A10000000000000000000024 /* CrimsonText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* CrimsonText-Regular.ttf */; };
+		A10000000000000000000025 /* CrimsonText-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* CrimsonText-SemiBold.ttf */; };
+		A10000000000000000000026 /* Caveat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000D /* Caveat.ttf */; };
+		A10000000000000000000027 /* Kalam-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000E /* Kalam-Regular.ttf */; };
+		A10000000000000000000028 /* Kalam-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000F /* Kalam-Bold.ttf */; };
+		A10000000000000000000029 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* Assets.xcassets */; };
+		A1000000000000000000002A /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* Inter.ttf */; };
+		A10000000000000000000031 /* Gael.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* Gael.jpeg */; };
+		A10000000000000000000032 /* Juanmi.png in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* Juanmi.png */; };
+		A10000000000000000000033 /* UnicaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* UnicaOne-Regular.ttf */; };
+		A10000000000000000000034 /* CrimsonText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* CrimsonText-Regular.ttf */; };
+		A10000000000000000000035 /* CrimsonText-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* CrimsonText-SemiBold.ttf */; };
+		A10000000000000000000036 /* Caveat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000D /* Caveat.ttf */; };
+		A10000000000000000000037 /* Kalam-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000E /* Kalam-Regular.ttf */; };
+		A10000000000000000000038 /* Kalam-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000F /* Kalam-Bold.ttf */; };
+		A10000000000000000000039 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000011 /* Inter.ttf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A20000000000000000000001 /* StoicGiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoicGiftApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* LifeCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCalendar.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A20000000000000000000004 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		A20000000000000000000005 /* StoicGift iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StoicGift iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000006 /* StoicGift macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StoicGift macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000007 /* AppFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFonts.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* Gael.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Gael.jpeg; sourceTree = "<group>"; };
+		A20000000000000000000009 /* Juanmi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Juanmi.png; sourceTree = "<group>"; };
+		A2000000000000000000000A /* UnicaOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "UnicaOne-Regular.ttf"; sourceTree = "<group>"; };
+		A2000000000000000000000B /* CrimsonText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CrimsonText-Regular.ttf"; sourceTree = "<group>"; };
+		A2000000000000000000000C /* CrimsonText-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CrimsonText-SemiBold.ttf"; sourceTree = "<group>"; };
+		A2000000000000000000000D /* Caveat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Caveat.ttf; sourceTree = "<group>"; };
+		A2000000000000000000000E /* Kalam-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Kalam-Regular.ttf"; sourceTree = "<group>"; };
+		A2000000000000000000000F /* Kalam-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Kalam-Bold.ttf"; sourceTree = "<group>"; };
+		A20000000000000000000010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20000000000000000000011 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A30000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A30000000000000000000011 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A40000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A40000000000000000000002 /* StoicGift */,
+				A20000000000000000000004 /* README.md */,
+				A40000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A40000000000000000000002 /* StoicGift */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000001 /* StoicGiftApp.swift */,
+				A20000000000000000000002 /* LifeCalendar.swift */,
+				A20000000000000000000003 /* ContentView.swift */,
+				A20000000000000000000007 /* AppFonts.swift */,
+				A20000000000000000000010 /* Assets.xcassets */,
+				A40000000000000000000004 /* Resources */,
+			);
+			path = StoicGift;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000005 /* StoicGift iOS.app */,
+				A20000000000000000000006 /* StoicGift macOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000004 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A40000000000000000000005 /* Images */,
+				A40000000000000000000006 /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000005 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000008 /* Gael.jpeg */,
+				A20000000000000000000009 /* Juanmi.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000006 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000000A /* UnicaOne-Regular.ttf */,
+				A2000000000000000000000B /* CrimsonText-Regular.ttf */,
+				A2000000000000000000000C /* CrimsonText-SemiBold.ttf */,
+				A2000000000000000000000D /* Caveat.ttf */,
+				A2000000000000000000000E /* Kalam-Regular.ttf */,
+				A2000000000000000000000F /* Kalam-Bold.ttf */,
+				A20000000000000000000011 /* Inter.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A50000000000000000000001 /* StoicGift iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A90000000000000000000002 /* Build configuration list for PBXNativeTarget "StoicGift iOS" */;
+			buildPhases = (
+				A70000000000000000000001 /* Sources */,
+				A30000000000000000000001 /* Frameworks */,
+				A80000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "StoicGift iOS";
+			productName = StoicGift;
+			productReference = A20000000000000000000005 /* StoicGift iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A50000000000000000000002 /* StoicGift macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A90000000000000000000003 /* Build configuration list for PBXNativeTarget "StoicGift macOS" */;
+			buildPhases = (
+				A70000000000000000000011 /* Sources */,
+				A30000000000000000000011 /* Frameworks */,
+				A80000000000000000000011 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "StoicGift macOS";
+			productName = StoicGift;
+			productReference = A20000000000000000000006 /* StoicGift macOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A60000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					A50000000000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					A50000000000000000000002 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = A90000000000000000000001 /* Build configuration list for PBXProject "StoicGift" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A40000000000000000000001;
+			productRefGroup = A40000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A50000000000000000000001 /* StoicGift iOS */,
+				A50000000000000000000002 /* StoicGift macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A80000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000021 /* Gael.jpeg in Resources */,
+				A10000000000000000000022 /* Juanmi.png in Resources */,
+				A10000000000000000000023 /* UnicaOne-Regular.ttf in Resources */,
+				A10000000000000000000024 /* CrimsonText-Regular.ttf in Resources */,
+				A10000000000000000000025 /* CrimsonText-SemiBold.ttf in Resources */,
+				A10000000000000000000026 /* Caveat.ttf in Resources */,
+				A10000000000000000000027 /* Kalam-Regular.ttf in Resources */,
+				A10000000000000000000028 /* Kalam-Bold.ttf in Resources */,
+				A10000000000000000000029 /* Assets.xcassets in Resources */,
+				A1000000000000000000002A /* Inter.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A80000000000000000000011 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000031 /* Gael.jpeg in Resources */,
+				A10000000000000000000032 /* Juanmi.png in Resources */,
+				A10000000000000000000033 /* UnicaOne-Regular.ttf in Resources */,
+				A10000000000000000000034 /* CrimsonText-Regular.ttf in Resources */,
+				A10000000000000000000035 /* CrimsonText-SemiBold.ttf in Resources */,
+				A10000000000000000000036 /* Caveat.ttf in Resources */,
+				A10000000000000000000037 /* Kalam-Regular.ttf in Resources */,
+				A10000000000000000000038 /* Kalam-Bold.ttf in Resources */,
+				A10000000000000000000039 /* Inter.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A70000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* StoicGiftApp.swift in Sources */,
+				A10000000000000000000002 /* LifeCalendar.swift in Sources */,
+				A10000000000000000000003 /* ContentView.swift in Sources */,
+				A10000000000000000000004 /* AppFonts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A70000000000000000000011 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000011 /* StoicGiftApp.swift in Sources */,
+				A10000000000000000000012 /* LifeCalendar.swift in Sources */,
+				A10000000000000000000013 /* ContentView.swift in Sources */,
+				A10000000000000000000014 /* AppFonts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA0000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		AA0000000000000000000011 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R5VN7G99MQ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Memore;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stoicgift.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA0000000000000000000012 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R5VN7G99MQ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Memore;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stoicgift.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA0000000000000000000021 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Memore;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stoicgift.macos;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000022 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Memore;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stoicgift.macos;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A90000000000000000000001 /* Build configuration list for PBXProject "StoicGift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000001 /* Debug */,
+				AA0000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A90000000000000000000002 /* Build configuration list for PBXNativeTarget "StoicGift iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000011 /* Debug */,
+				AA0000000000000000000012 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A90000000000000000000003 /* Build configuration list for PBXNativeTarget "StoicGift macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000021 /* Debug */,
+				AA0000000000000000000022 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A60000000000000000000001 /* Project object */;
+}

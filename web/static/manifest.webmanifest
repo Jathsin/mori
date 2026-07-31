@@ -1,0 +1,17 @@
+{
+  "name": "Memore",
+  "short_name": "Memore",
+  "description": "Un calendario de nuestras vidas.",
+  "start_url": "../",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#f5f5f5",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

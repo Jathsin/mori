@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1024"
+     height="1024"
+     viewBox="0 0 1024 1024"
+     role="img"
+     aria-labelledby="title description">
+  <title id="title">Stoic Gift</title>
+  <desc id="description">A charcoal heart containing two bold clock hands.</desc>
+
+  <rect width="1024" height="1024" fill="#f5f5f5"/>
+
+  <path
+    fill="#292926"
+    d="M512 895
+       C472 857 151 629 151 345
+       C151 151 378 91 512 259
+       C646 91 873 151 873 345
+       C873 629 552 857 512 895Z"/>
+
+  <path
+    fill="none"
+    stroke="#f5f5f5"
+    stroke-width="48"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M512 512 L512 319
+       M512 512 L686 617"/>
+</svg>

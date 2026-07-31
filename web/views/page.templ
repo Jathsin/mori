@@ -1,0 +1,133 @@
+package views
+
+import (
+	"fmt"
+	"time"
+)
+
+var milestoneDates = map[string]bool{
+	"2005-01-15": true,
+	"2005-05-26": true,
+	"2024-11-14": true,
+	"2026-06-01": true,
+}
+
+func weekStart(index int) time.Time {
+	start := time.Date(2005, time.January, 15, 0, 0, 0, 0, time.UTC)
+	return start.AddDate(0, 0, index*7)
+}
+
+func isMilestoneWeek(index int) bool {
+	start := weekStart(index)
+	end := start.AddDate(0, 0, 7)
+	for date := range milestoneDates {
+		value, err := time.Parse("2006-01-02", date)
+		if err == nil && !value.Before(start) && value.Before(end) {
+			return true
+		}
+	}
+	return false
+}
+
+func weekLabel(index int) string {
+	return weekStart(index).Format("2 Jan 2006")
+}
+
+func weekTicks() []int {
+	values := []int{1}
+	for week := 5; week <= 50; week += 5 {
+		values = append(values, week)
+	}
+	return values
+}
+
+func yearTicks() []int {
+	values := []int{1}
+	for year := 5; year <= 90; year += 5 {
+		values = append(values, year)
+	}
+	return values
+}
+
+templ Page() {
+	<!doctype html>
+	<html lang="es">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+			<meta name="theme-color" content="#f5f5f5"/>
+			<meta name="apple-mobile-web-app-capable" content="yes"/>
+			<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+			<meta name="apple-mobile-web-app-title" content="Memore"/>
+			<meta name="description" content="Un calendario de nuestras vidas."/>
+			<title>Memore</title>
+			<link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
+			<link rel="apple-touch-icon" href="./assets/icon.png"/>
+			<link rel="manifest" href="./assets/manifest.webmanifest"/>
+			<link rel="stylesheet" href="./assets/app.css"/>
+			<script src="./assets/htmx.min.js" defer></script>
+			<script src="./assets/app.js" defer></script>
+		</head>
+		<body hx-boost="true">
+			<main class="memore" aria-label="Calendario de vida de Gael y Juanmi">
+				<header class="header">
+					<div class="portraits" aria-label="Gael y Juanmi">
+						<img src="./assets/gael.jpeg" alt="Retrato de Gael"/>
+						<img src="./assets/juanmi.png" alt="Retrato de Juanmi"/>
+					</div>
+					<h1>Memento amare</h1>
+				</header>
+
+				<section class="calendar" aria-label="Calendario de 90 años">
+					<div class="calendar-head">
+						<span class="year-heading">AÑO</span>
+						<div class="week-ruler">
+							for _, week := range weekTicks() {
+								<span class="week-number" style={ fmt.Sprintf("--week:%d", week) }>{ fmt.Sprint(week) }</span>
+							}
+							<span class="week-heading">SEMANA</span>
+							<div class="week-marks" aria-hidden="true">
+								for week := 1; week <= 52; week++ {
+									<i class={ templ.KV("major", week == 1 || week%5 == 0) }></i>
+								}
+							</div>
+						</div>
+					</div>
+
+					<div class="calendar-body">
+						<div class="year-ruler" aria-hidden="true">
+							for _, year := range yearTicks() {
+								<span class="year-number" style={ fmt.Sprintf("--year:%d", year) }>{ fmt.Sprint(year) }</span>
+							}
+							<div class="year-marks">
+								for year := 1; year <= 90; year++ {
+									<i class={ templ.KV("major", year == 1 || year%5 == 0) }></i>
+								}
+							</div>
+						</div>
+						<div class="weeks" id="life-grid">
+							for index := 0; index < 90*52; index++ {
+								<span
+									class={ "week", templ.KV("milestone", isMilestoneWeek(index)) }
+									data-start={ weekStart(index).Format("2006-01-02") }
+									title={ weekLabel(index) }
+									aria-label={ weekLabel(index) }
+								></span>
+							}
+						</div>
+					</div>
+				</section>
+
+				<footer class="counter" aria-label="Tiempo juntos desde el 14 de noviembre de 2024">
+					<div><strong id="days">000</strong><small>DÍAS</small></div>
+					<span>:</span>
+					<div><strong id="hours">00</strong><small>HRS</small></div>
+					<span>:</span>
+					<div><strong id="minutes">00</strong><small>MIN</small></div>
+					<span>:</span>
+					<div><strong id="seconds">00</strong><small>SEG</small></div>
+				</footer>
+			</main>
+		</body>
+	</html>
+}
