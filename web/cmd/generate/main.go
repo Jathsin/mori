@@ -41,6 +41,7 @@ func main() {
 		"icon.svg",
 		"icon.png",
 		"icon-solid-v3.png",
+		"mori-touch-icon-180.png",
 		"manifest.webmanifest",
 		"service-worker.js",
 	} {
