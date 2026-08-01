@@ -835,7 +835,8 @@ html[data-theme="dark"] .scroll-cue {
 }
 
 .detail-dialog {
-  padding: 22px;
+  position: relative;
+  padding: 22px 22px 58px;
 }
 
 .detail-dialog .dialog-heading {
@@ -871,13 +872,35 @@ html[data-theme="dark"] .scroll-cue {
 }
 
 .delete-moment {
-  align-self: flex-start;
-  padding: 7px 10px;
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  place-items: center;
   border: 0;
-  border-radius: 999px;
-  background: rgb(155 61 55 / 10%);
+  border-radius: 50%;
+  background: transparent;
+  color: rgb(26 23 19 / 52%);
+  cursor: pointer;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.delete-moment svg {
+  width: 18px;
+  height: 18px;
+}
+
+.delete-moment:hover,
+.delete-moment:focus-visible {
+  background: rgb(155 61 55 / 9%);
   color: #9b3d37;
-  font: 550 9px/1 "Inter", sans-serif;
+}
+
+html[data-theme="dark"] .delete-moment {
+  color: rgb(236 233 228 / 62%);
 }
 
 .counter div {
