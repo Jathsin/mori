@@ -1,10 +1,17 @@
 (() => {
   const meeting = new Date("2024-11-14T00:00:00Z");
-  const lifeStart = Date.UTC(2005, 0, 15);
+  let lifeStart = Date.UTC(2005, 0, 15);
   const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
-  const storageKey = "memore-moments-v1";
-  const seasonStorageKey = "memore-seasons-v1";
+  const legacyStorageKey = "memore-moments-v1";
+  const legacySeasonStorageKey = "memore-seasons-v1";
   const portraitStorageKey = "memore-portraits-v1";
+  const deviceOwnerStorageKey = "mori-device-owner-v1";
+  const profileNames = { january: "Juanmi", may: "Gael" };
+  const requestedOwner = new URLSearchParams(location.search).get("owner");
+  const ownerFromURL = requestedOwner === "gael" ? "may" : requestedOwner === "juanmi" ? "january" : "";
+  if (ownerFromURL) localStorage.setItem(deviceOwnerStorageKey, ownerFromURL);
+  const deviceOwner = localStorage.getItem(deviceOwnerStorageKey) === "may" ? "may" : "january";
+  let activeProfile = deviceOwner;
   const supabaseURL = "https://rdetnbshddywjymtidaw.supabase.co";
   const supabaseKey = "sb_publishable_gU1l6K8OHMtblrgqfXIlMg_UMjEDRpF";
   const seasonColors = [
@@ -53,10 +60,27 @@
     seconds: document.querySelector("#seconds"),
   };
 
+  const profileStorageKey = (base, profile) => `${base}-${profile}`;
+  const momentStorageKey = (profile = activeProfile) => profileStorageKey(legacyStorageKey, profile);
+  const seasonStorageKey = (profile = activeProfile) => profileStorageKey(legacySeasonStorageKey, profile);
+
+  function migrateLegacyState() {
+    if (localStorage.getItem(momentStorageKey("january")) === null && localStorage.getItem(legacyStorageKey) !== null) {
+      localStorage.setItem(momentStorageKey("january"), localStorage.getItem(legacyStorageKey));
+    }
+    if (localStorage.getItem(seasonStorageKey("january")) === null && localStorage.getItem(legacySeasonStorageKey) !== null) {
+      localStorage.setItem(seasonStorageKey("january"), localStorage.getItem(legacySeasonStorageKey));
+    }
+  }
+
+  migrateLegacyState();
+
   function localState() {
     return {
-      moments: readMoments(),
-      seasons: readSeasons(),
+      profiles: {
+        january: { moments: readMoments("january"), seasons: readSeasons("january") },
+        may: { moments: readMoments("may"), seasons: readSeasons("may") },
+      },
       portraits: readPortraitSettings(),
     };
   }
@@ -64,12 +88,19 @@
   function applyCloudState(data) {
     if (!data) return;
     applyingCloudState = true;
-    if (Array.isArray(data.moments)) localStorage.setItem(storageKey, JSON.stringify(data.moments));
-    if (Array.isArray(data.seasons)) localStorage.setItem(seasonStorageKey, JSON.stringify(data.seasons));
+    if (data.profiles) {
+      ["january", "may"].forEach((profile) => {
+        const state = data.profiles[profile];
+        if (Array.isArray(state?.moments)) localStorage.setItem(momentStorageKey(profile), JSON.stringify(state.moments));
+        if (Array.isArray(state?.seasons)) localStorage.setItem(seasonStorageKey(profile), JSON.stringify(state.seasons));
+      });
+    } else {
+      if (Array.isArray(data.moments)) localStorage.setItem(momentStorageKey("january"), JSON.stringify(data.moments));
+      if (Array.isArray(data.seasons)) localStorage.setItem(seasonStorageKey("january"), JSON.stringify(data.seasons));
+    }
     if (data.portraits) localStorage.setItem(portraitStorageKey, JSON.stringify(data.portraits));
-    renderSeasons();
-    renderMoments();
     loadPortraits();
+    switchProfile(activeProfile);
     applyingCloudState = false;
   }
 
@@ -212,7 +243,7 @@
       candidate.getUTCDate() !== day
     ) return "";
     const isoDate = `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    if (isoDate < "2005-01-15" || isoDate > input.dataset.calendarMax) return "";
+    if (isoDate < isoDateFromTime(lifeStart) || isoDate > input.dataset.calendarMax) return "";
     return isoDate;
   }
 
@@ -221,6 +252,10 @@
     input.setCustomValidity(date ? "" : "Escribe una fecha válida: DD/MM/AAAA");
     if (!date) input.reportValidity();
     return date;
+  }
+
+  function isoDateFromTime(time) {
+    return new Date(time).toISOString().slice(0, 10);
   }
 
   document.querySelectorAll(".written-date").forEach((input) => {
@@ -242,9 +277,49 @@
     });
   }
 
-  function readMoments() {
+  function updateViewControls() {
+    const readOnly = activeProfile !== deviceOwner;
+    memore.classList.toggle("readonly-view", readOnly);
+    memore.dataset.activeProfile = activeProfile;
+    memore.setAttribute("aria-label", `Mori de ${profileNames[activeProfile]}${readOnly ? ", solo lectura" : ""}`);
+    document.querySelectorAll(".portrait").forEach((portrait) => {
+      const profile = portrait.dataset.profile;
+      portrait.classList.toggle("active-profile", profile === activeProfile);
+      const viewButton = portrait.querySelector(".view-profile");
+      if (viewButton) viewButton.hidden = profile === activeProfile;
+      const editButton = portrait.querySelector(".portrait-button");
+      if (editButton) editButton.disabled = readOnly || profile !== deviceOwner;
+    });
+  }
+
+  function switchProfile(profile) {
+    if (!profileNames[profile]) return;
+    activeProfile = profile;
+    const settings = readPortraitSettings();
+    const startDate = settings[profile]?.date || (profile === "may" ? "2005-05-26" : "2005-01-15");
+    lifeStart = Date.parse(`${startDate}T00:00:00Z`);
+    grid.querySelectorAll(".week").forEach((cell, index) => {
+      const date = isoDateFromTime(lifeStart + index * millisecondsPerWeek);
+      cell.dataset.start = date;
+      cell.title = date;
+      cell.setAttribute("aria-label", date);
+    });
+    const calendarMax = grid.lastElementChild?.dataset.start || isoDateFromTime(lifeStart + 90 * 52 * millisecondsPerWeek);
+    document.querySelectorAll(".written-date").forEach((input) => {
+      input.dataset.calendarMax = calendarMax;
+    });
+    expandedSeasonId = undefined;
+    note.hidden = true;
+    updateViewControls();
+    updateCalendar();
+    renderSeasons();
+    renderMoments();
+    window.requestAnimationFrame(drawLifeLines);
+  }
+
+  function readMoments(profile = activeProfile) {
     try {
-      const value = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      const value = JSON.parse(localStorage.getItem(momentStorageKey(profile)) || "[]");
       if (!Array.isArray(value)) return [];
       return value.map((moment, index) => ({
         ...moment,
@@ -256,9 +331,9 @@
     }
   }
 
-  function readSeasons() {
+  function readSeasons(profile = activeProfile) {
     try {
-      const value = JSON.parse(localStorage.getItem(seasonStorageKey) || "[]");
+      const value = JSON.parse(localStorage.getItem(seasonStorageKey(profile)) || "[]");
       return Array.isArray(value) ? value : [];
     } catch {
       return [];
@@ -507,6 +582,7 @@
   }
 
   function selectSeason(cell) {
+    if (activeProfile !== deviceOwner) return;
     const seasonId = cell.dataset.seasonId;
     if (!seasonId) return;
     grid.querySelectorAll(".season-selected").forEach((selected) => selected.classList.remove("season-selected"));
@@ -524,7 +600,7 @@
     deleteButton.addEventListener("click", (event) => {
       event.stopPropagation();
       const seasons = readSeasons().filter((season) => season.id !== seasonId);
-      localStorage.setItem(seasonStorageKey, JSON.stringify(seasons));
+      localStorage.setItem(seasonStorageKey(), JSON.stringify(seasons));
       queueCloudSave();
       renderSeasons();
       renderMoments();
@@ -686,6 +762,7 @@
   });
 
   document.querySelector("#add-moment").addEventListener("click", () => {
+    if (activeProfile !== deviceOwner) return;
     const today = todayString();
     const latestDate = today < dateInput.dataset.calendarMax ? today : dateInput.dataset.calendarMax;
     dateInput.value = formatWrittenDate(latestDate);
@@ -696,6 +773,7 @@
   });
 
   document.querySelector("#add-season").addEventListener("click", () => {
+    if (activeProfile !== deviceOwner) return;
     const today = todayString();
     seasonStartInput.setCustomValidity("");
     seasonEndInput.setCustomValidity("");
@@ -711,8 +789,15 @@
   });
 
   portraits.addEventListener("click", (event) => {
+    const viewButton = event.target.closest(".view-profile");
+    if (viewButton) {
+      switchProfile(viewButton.dataset.viewProfile);
+      return;
+    }
     const portraitButton = event.target.closest(".portrait-button");
-    if (portraitButton) openPortraitEditor(portraitButton.dataset.portrait);
+    if (portraitButton && activeProfile === deviceOwner && portraitButton.dataset.portrait === deviceOwner) {
+      openPortraitEditor(portraitButton.dataset.portrait);
+    }
   });
 
   document.querySelector("#close-dialog").addEventListener("click", () => dialog.close());
@@ -733,9 +818,9 @@
     }
   });
   document.querySelector("#delete-moment").addEventListener("click", async () => {
-    if (!detailMomentId) return;
+    if (!detailMomentId || activeProfile !== deviceOwner) return;
     const moments = readMoments().filter((moment) => moment.id !== detailMomentId);
-    localStorage.setItem(storageKey, JSON.stringify(moments));
+    localStorage.setItem(momentStorageKey(), JSON.stringify(moments));
     try { await deleteImage(detailMomentId); } catch { /* The note can still be deleted. */ }
     detailMomentId = undefined;
     detailDialog.close();
@@ -763,6 +848,7 @@
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (activeProfile !== deviceOwner) return;
     const date = requireWrittenDate(dateInput);
     const description = descriptionInput.value.trim();
     const index = weekIndex(date);
@@ -782,7 +868,7 @@
 
     const moments = readMoments();
     moments.push({ id, date, description, hasImage });
-    localStorage.setItem(storageKey, JSON.stringify(moments));
+    localStorage.setItem(momentStorageKey(), JSON.stringify(moments));
     queueCloudSave();
     renderMoments();
     dialog.close();
@@ -793,6 +879,7 @@
 
   seasonForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (activeProfile !== deviceOwner) return;
     seasonStartInput.setCustomValidity("");
     seasonEndInput.setCustomValidity("");
     const start = requireWrittenDate(seasonStartInput);
@@ -824,7 +911,7 @@
       color: pendingSeasonColor || randomSeasonColor(seasons),
     });
     pendingSeasonColor = undefined;
-    localStorage.setItem(seasonStorageKey, JSON.stringify(seasons));
+    localStorage.setItem(seasonStorageKey(), JSON.stringify(seasons));
     queueCloudSave();
     renderSeasons();
     renderMoments();
@@ -835,6 +922,7 @@
 
   portraitForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (activeProfile !== deviceOwner) return;
     const key = portraitKeyInput.value;
     const date = requireWrittenDate(portraitDateInput);
     const image = portraitImageInput.files[0];
@@ -850,12 +938,10 @@
     queueCloudSave();
     portraitDialog.close();
     await loadPortraits();
+    switchProfile(activeProfile);
   });
 
-  updateCalendar();
-  renderSeasons();
-  renderMoments();
-  loadPortraits();
+  loadPortraits().then(() => switchProfile(activeProfile));
   initializeCloud();
   updateCounter();
   window.requestAnimationFrame(drawLifeLines);

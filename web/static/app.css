@@ -155,6 +155,10 @@ label {
   flex: none;
 }
 
+.portrait {
+  position: relative;
+}
+
 .portraits img {
   display: block;
   width: 52px;
@@ -176,6 +180,40 @@ label {
 
 .portrait-button:active {
   opacity: 0.72;
+}
+
+.view-profile {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgb(26 23 19 / 18%);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 2px 7px rgb(26 23 19 / 12%);
+  cursor: pointer;
+  z-index: 3;
+}
+
+.view-profile[hidden] { display: none; }
+.view-profile svg { width: 12px; height: 12px; }
+.portrait.active-profile .portrait-button { outline: 1px solid rgb(26 23 19 / 28%); outline-offset: 2px; }
+.readonly-view .moment-actions { visibility: hidden; pointer-events: none; }
+.readonly-view .delete-moment { display: none; }
+
+html[data-theme="dark"] .view-profile {
+  border-color: rgb(236 233 228 / 22%);
+  background: #1d1c1a;
+  color: #ece9e4;
+}
+
+html[data-theme="dark"] .portrait.active-profile .portrait-button {
+  outline-color: rgb(236 233 228 / 38%);
 }
 
 h1 {

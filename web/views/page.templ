@@ -51,22 +51,32 @@ templ Page() {
 			<link rel="apple-touch-icon" sizes="180x180" href="./assets/mori-touch-icon-180.png"/>
 			<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./assets/mori-touch-icon-180.png"/>
 			<link rel="manifest" href="./assets/manifest.webmanifest"/>
-			<link rel="stylesheet" href="./assets/app.css?v=18"/>
+			<link rel="stylesheet" href="./assets/app.css?v=19"/>
 			<script src="./assets/htmx.min.js" defer></script>
 			<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-			<script src="./assets/app.js?v=17" defer></script>
+			<script src="./assets/app.js?v=18" defer></script>
 		</head>
 		<body hx-boost="true">
 			<main class="memore" aria-label="Calendario de vida de Gael y Juanmi">
 				<canvas id="life-lines" aria-hidden="true"></canvas>
 				<header class="header">
-					<div class="portraits" aria-label="Gael y Juanmi">
-						<button class="portrait-button" type="button" data-portrait="january" aria-label="Editar primer retrato">
-							<img id="portrait-january" data-birth-date="2005-01-15" src="./assets/juanmi-2026.jpg" alt="Retrato asociado al 15 de enero de 2005"/>
-						</button>
-						<button class="portrait-button" type="button" data-portrait="may" aria-label="Editar segundo retrato">
-							<img id="portrait-may" data-birth-date="2005-05-26" src="./assets/gael.jpeg" alt="Retrato asociado al 26 de mayo de 2005"/>
-						</button>
+					<div class="portraits" aria-label="Juanmi y Gael">
+						<div class="portrait" data-profile="january">
+							<button class="portrait-button" type="button" data-portrait="january" aria-label="Editar retrato de Juanmi">
+								<img id="portrait-january" data-birth-date="2005-01-15" src="./assets/juanmi-2026.jpg" alt="Retrato de Juanmi, 15 de enero de 2005"/>
+							</button>
+							<button class="view-profile" type="button" data-view-profile="january" aria-label="Ver el Mori de Juanmi" hidden>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+							</button>
+						</div>
+						<div class="portrait" data-profile="may">
+							<button class="portrait-button" type="button" data-portrait="may" aria-label="Editar retrato de Gael">
+								<img id="portrait-may" data-birth-date="2005-05-26" src="./assets/gael.jpeg" alt="Retrato de Gael, 26 de mayo de 2005"/>
+							</button>
+							<button class="view-profile" type="button" data-view-profile="may" aria-label="Ver el Mori de Gael" hidden>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+							</button>
+						</div>
 					</div>
 					<h1>“Memento amare”</h1>
 					<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">
