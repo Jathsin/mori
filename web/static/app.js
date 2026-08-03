@@ -43,6 +43,7 @@
   const portraitKeyInput = document.querySelector("#portrait-key");
   const portraitDateInput = document.querySelector("#portrait-date");
   const portraitImageInput = document.querySelector("#portrait-image");
+  const themeToggle = document.querySelector("#theme-toggle");
   const seasonList = document.querySelector("#season-list");
   let detailImageURL;
   let detailMomentId;
@@ -54,6 +55,7 @@
   let applyingCloudState = false;
   const cloudClient = globalThis.supabase?.createClient(supabaseURL, supabaseKey);
   const fields = {
+    years: document.querySelector("#years"),
     days: document.querySelector("#days"),
     hours: document.querySelector("#hours"),
     minutes: document.querySelector("#minutes"),
@@ -158,12 +160,21 @@
   }
 
   function updateCounter() {
-    const elapsed = Math.max(0, Math.floor((Date.now() - meeting.getTime()) / 1000));
+    const now = new Date();
+    let years = now.getUTCFullYear() - meeting.getUTCFullYear();
+    let anniversary = Date.UTC(meeting.getUTCFullYear() + years, meeting.getUTCMonth(), meeting.getUTCDate());
+    if (now.getTime() < anniversary) {
+      years -= 1;
+      anniversary = Date.UTC(meeting.getUTCFullYear() + years, meeting.getUTCMonth(), meeting.getUTCDate());
+    }
+    years = Math.max(0, years);
+    const elapsed = Math.max(0, Math.floor((now.getTime() - anniversary) / 1000));
     const days = Math.floor(elapsed / 86400);
     const hours = Math.floor((elapsed % 86400) / 3600);
     const minutes = Math.floor((elapsed % 3600) / 60);
     const seconds = elapsed % 60;
 
+    fields.years.textContent = String(years);
     fields.days.textContent = String(days).padStart(3, "0");
     fields.hours.textContent = String(hours).padStart(2, "0");
     fields.minutes.textContent = String(minutes).padStart(2, "0");
@@ -696,35 +707,24 @@
 
   let audioContext;
 
-  function tick(frequency) {
-    if (!audioContext) return;
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    oscillator.type = "sine";
-    oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(0.018, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.035);
-    oscillator.connect(gain).connect(audioContext.destination);
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.04);
+  function playSwitchSound(isOn) {
+    audioContext ||= new AudioContext();
+    if (audioContext.state === "suspended") audioContext.resume();
+    const start = audioContext.currentTime;
+    [isOn ? 520 : 390, isOn ? 690 : 300].forEach((frequency, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const time = start + index * 0.026;
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.exponentialRampToValueAtTime(0.025, time + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.035);
+      oscillator.connect(gain).connect(audioContext.destination);
+      oscillator.start(time);
+      oscillator.stop(time + 0.04);
+    });
   }
-
-  document.addEventListener(
-    "pointerdown",
-    () => {
-      audioContext ||= new AudioContext();
-      if (audioContext.state === "suspended") audioContext.resume();
-    },
-    { once: true },
-  );
-
-  grid.addEventListener("pointerover", (event) => {
-    if (event.target.classList.contains("week")) tick(510);
-  });
-
-  grid.addEventListener("pointerout", (event) => {
-    if (event.target.classList.contains("week")) tick(390);
-  });
 
   let pointerStart;
 
@@ -804,18 +804,14 @@
   document.querySelector("#close-season-dialog").addEventListener("click", () => seasonDialog.close());
   document.querySelector("#close-portrait-dialog").addEventListener("click", () => portraitDialog.close());
   document.querySelector("#close-detail").addEventListener("click", () => detailDialog.close());
-  document.querySelector("#theme-toggle").addEventListener("click", () => {
-    const applyTheme = () => {
-      const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-      document.documentElement.dataset.theme = theme;
-      localStorage.setItem("memore-theme", theme);
-      window.requestAnimationFrame(drawLifeLines);
-    };
-    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.startViewTransition(applyTheme);
-    } else {
-      applyTheme();
-    }
+  themeToggle.setAttribute("aria-checked", String(document.documentElement.dataset.theme === "dark"));
+  themeToggle.addEventListener("click", () => {
+    const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("memore-theme", theme);
+    const isDark = theme === "dark";
+    themeToggle.setAttribute("aria-checked", String(isDark));
+    playSwitchSound(isDark);
   });
   document.querySelector("#delete-moment").addEventListener("click", async () => {
     if (!detailMomentId || activeProfile !== deviceOwner) return;
