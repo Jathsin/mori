@@ -10,7 +10,7 @@
   const requestedOwner = new URLSearchParams(location.search).get("owner");
   const ownerFromURL = requestedOwner === "gael" ? "may" : requestedOwner === "juanmi" ? "january" : "";
   if (ownerFromURL) localStorage.setItem(deviceOwnerStorageKey, ownerFromURL);
-  const deviceOwner = localStorage.getItem(deviceOwnerStorageKey) === "may" ? "may" : "january";
+  let deviceOwner = localStorage.getItem(deviceOwnerStorageKey) === "may" ? "may" : "january";
   let activeProfile = deviceOwner;
   const supabaseURL = "https://rdetnbshddywjymtidaw.supabase.co";
   const supabaseKey = "sb_publishable_gU1l6K8OHMtblrgqfXIlMg_UMjEDRpF";
@@ -53,6 +53,7 @@
   let cloudUser;
   let cloudSaveTimer;
   let portraitSyncChannel;
+  let sharedCoupleId;
   let applyingCloudState = false;
   const cloudClient = globalThis.supabase?.createClient(supabaseURL, supabaseKey);
   const fields = {
@@ -78,42 +79,36 @@
 
   migrateLegacyState();
 
-  function localState() {
-    return {
-      profiles: {
-        january: { moments: readMoments("january"), seasons: readSeasons("january") },
-        may: { moments: readMoments("may"), seasons: readSeasons("may") },
-      },
-      portraits: readPortraitSettings(),
-    };
-  }
-
-  function applyCloudState(data) {
-    if (!data) return;
+  function applySharedProfiles(rows) {
+    if (!Array.isArray(rows) || !rows.length) return;
     applyingCloudState = true;
-    if (data.profiles) {
-      ["january", "may"].forEach((profile) => {
-        const state = data.profiles[profile];
-        if (Array.isArray(state?.moments)) localStorage.setItem(momentStorageKey(profile), JSON.stringify(state.moments));
-        if (Array.isArray(state?.seasons)) localStorage.setItem(seasonStorageKey(profile), JSON.stringify(state.seasons));
-      });
-    } else {
-      if (Array.isArray(data.moments)) localStorage.setItem(momentStorageKey("january"), JSON.stringify(data.moments));
-      if (Array.isArray(data.seasons)) localStorage.setItem(seasonStorageKey("january"), JSON.stringify(data.seasons));
-    }
-    if (data.portraits) localStorage.setItem(portraitStorageKey, JSON.stringify(data.portraits));
+    const portraitsState = readPortraitSettings();
+    rows.forEach((row) => {
+      if (!profileNames[row.profile]) return;
+      if (Array.isArray(row.moments)) localStorage.setItem(momentStorageKey(row.profile), JSON.stringify(row.moments));
+      if (Array.isArray(row.seasons)) localStorage.setItem(seasonStorageKey(row.profile), JSON.stringify(row.seasons));
+      if (row.portrait && typeof row.portrait === "object") portraitsState[row.profile] = row.portrait;
+    });
+    localStorage.setItem(portraitStorageKey, JSON.stringify(portraitsState));
     loadPortraits();
     switchProfile(activeProfile);
     applyingCloudState = false;
   }
 
   async function saveCloudState() {
-    if (!cloudClient || !cloudUser || applyingCloudState) return;
-    await cloudClient.from("memore_state").upsert({
-      user_id: cloudUser.id,
-      data: localState(),
-      updated_at: new Date().toISOString(),
-    });
+    if (!cloudClient || !cloudUser || !sharedCoupleId || applyingCloudState) return;
+    const portraitsState = readPortraitSettings();
+    await cloudClient
+      .from("mori_shared_profiles")
+      .update({
+        moments: readMoments(deviceOwner),
+        seasons: readSeasons(deviceOwner),
+        portrait: portraitsState[deviceOwner] || {},
+        updated_at: new Date().toISOString(),
+      })
+      .eq("couple_id", sharedCoupleId)
+      .eq("profile", deviceOwner)
+      .eq("owner_id", cloudUser.id);
   }
 
   function queueCloudSave() {
@@ -123,14 +118,30 @@
 
   async function startCloud(session) {
     cloudUser = session.user;
-    const { data, error } = await cloudClient.from("memore_state").select("data").eq("user_id", cloudUser.id).maybeSingle();
-    if (!error && data?.data) applyCloudState(data.data);
-    else if (!error) await saveCloudState();
-    cloudClient.channel(`memore-${cloudUser.id}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "memore_state", filter: `user_id=eq.${cloudUser.id}` },
-        (change) => applyCloudState(change.new?.data))
+    const { data: membership, error: membershipError } = await cloudClient
+      .from("mori_members")
+      .select("couple_id, profile")
+      .eq("user_id", cloudUser.id)
+      .single();
+    if (membershipError || !membership) throw membershipError || new Error("Esta cuenta no pertenece al Mori compartido");
+
+    sharedCoupleId = membership.couple_id;
+    deviceOwner = membership.profile;
+    activeProfile = deviceOwner;
+    localStorage.setItem(deviceOwnerStorageKey, deviceOwner);
+
+    const { data: profiles, error } = await cloudClient
+      .from("mori_shared_profiles")
+      .select("profile, owner_id, moments, seasons, portrait, updated_at")
+      .eq("couple_id", sharedCoupleId);
+    if (error) throw error;
+    applySharedProfiles(profiles);
+
+    cloudClient.channel(`mori-shared-${sharedCoupleId}`)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "mori_shared_profiles", filter: `couple_id=eq.${sharedCoupleId}` },
+        (change) => applySharedProfiles([change.new]))
       .subscribe();
-    portraitSyncChannel = cloudClient.channel(`mori-portraits-${cloudUser.id}`)
+    portraitSyncChannel = cloudClient.channel(`mori-portraits-${sharedCoupleId}`)
       .on("broadcast", { event: "portrait-updated" }, () => loadPortraits())
       .subscribe();
     await loadPortraits();
@@ -475,11 +486,12 @@
   }
 
   function portraitCloudPath(key) {
-    return `${cloudUser.id}/portraits/${key}`;
+    if (!sharedCoupleId) return "";
+    return `${sharedCoupleId}/portraits/${key}`;
   }
 
   async function readPortraitImage(key) {
-    if (cloudClient && cloudUser) {
+    if (cloudClient && cloudUser && sharedCoupleId) {
       const { data, error } = await cloudClient.storage.from("mori-media").download(portraitCloudPath(key));
       if (!error && data) return data;
     }
@@ -487,7 +499,7 @@
   }
 
   async function uploadPortraitImage(key, image) {
-    if (!cloudClient || !cloudUser) throw new Error("Inicia sesión antes de cambiar el retrato");
+    if (!cloudClient || !cloudUser || !sharedCoupleId) throw new Error("Inicia sesión antes de cambiar el retrato");
     const { error } = await cloudClient.storage.from("mori-media").upload(portraitCloudPath(key), image, {
       upsert: true,
       contentType: image.type || "image/jpeg",
@@ -751,9 +763,23 @@
 
   let audioContext;
 
-  function playSwitchSound(isOn) {
-    audioContext ||= new AudioContext();
-    if (audioContext.state === "suspended") audioContext.resume();
+  function getAudioContext() {
+    const AudioContextClass = globalThis.AudioContext || globalThis.webkitAudioContext;
+    if (!AudioContextClass) return undefined;
+    audioContext ||= new AudioContextClass();
+    return audioContext;
+  }
+
+  async function readyAudioContext() {
+    const context = getAudioContext();
+    if (!context) return undefined;
+    if (context.state === "suspended") await context.resume();
+    return context.state === "running" ? context : undefined;
+  }
+
+  async function playSwitchSound(isOn) {
+    const audioContext = await readyAudioContext();
+    if (!audioContext) return;
     const start = audioContext.currentTime;
     [isOn ? 520 : 390, isOn ? 690 : 300].forEach((frequency, index) => {
       const oscillator = audioContext.createOscillator();
@@ -770,11 +796,11 @@
     });
   }
 
-  function playViewSound(viewingOther) {
-    audioContext ||= new AudioContext();
-    if (audioContext.state === "suspended") audioContext.resume();
+  async function playViewSound(viewingOther) {
+    const audioContext = await readyAudioContext();
+    if (!audioContext) return;
     const start = audioContext.currentTime;
-    const frequencies = viewingOther ? [210, 165] : [165, 210];
+    const frequencies = viewingOther ? [260, 215] : [215, 260];
     frequencies.forEach((frequency, index) => {
       const oscillator = audioContext.createOscillator();
       const gain = audioContext.createGain();
@@ -782,13 +808,18 @@
       oscillator.type = "triangle";
       oscillator.frequency.value = frequency;
       gain.gain.setValueAtTime(0.0001, time);
-      gain.gain.exponentialRampToValueAtTime(0.018, time + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.032, time + 0.006);
       gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.075);
       oscillator.connect(gain).connect(audioContext.destination);
       oscillator.start(time);
       oscillator.stop(time + 0.08);
     });
   }
+
+  document.addEventListener("pointerdown", () => {
+    const context = getAudioContext();
+    if (context?.state === "suspended") void context.resume();
+  }, { once: true, capture: true });
 
   let pointerStart;
 
@@ -857,7 +888,7 @@
     if (viewButton) {
       const targetProfile = viewButton.dataset.viewProfile;
       switchProfile(targetProfile);
-      playViewSound(targetProfile !== deviceOwner);
+      void playViewSound(targetProfile !== deviceOwner);
       return;
     }
     const portraitButton = event.target.closest(".portrait-button");
@@ -877,7 +908,7 @@
     localStorage.setItem("memore-theme", theme);
     const isDark = theme === "dark";
     themeToggle.setAttribute("aria-checked", String(isDark));
-    playSwitchSound(isDark);
+    void playSwitchSound(isDark);
   });
   document.querySelector("#delete-moment").addEventListener("click", async () => {
     if (!detailMomentId || activeProfile !== deviceOwner) return;
