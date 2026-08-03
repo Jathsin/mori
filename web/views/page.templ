@@ -51,10 +51,10 @@ templ Page() {
 			<link rel="apple-touch-icon" sizes="180x180" href="./assets/mori-touch-icon-180.png"/>
 			<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./assets/mori-touch-icon-180.png"/>
 			<link rel="manifest" href="./assets/manifest.webmanifest"/>
-			<link rel="stylesheet" href="./assets/app.css?v=22"/>
+			<link rel="stylesheet" href="./assets/app.css?v=27"/>
 			<script src="./assets/htmx.min.js" defer></script>
 			<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-			<script src="./assets/app.js?v=21" defer></script>
+			<script src="./assets/app.js?v=25" defer></script>
 		</head>
 		<body hx-boost="true">
 			<main class="memore" aria-label="Calendario de vida de Gael y Juanmi">
@@ -78,7 +78,12 @@ templ Page() {
 							</button>
 						</div>
 					</div>
-					<h1>“Memento amare”</h1>
+					<h1>Memento amare</h1>
+					<span class="theme-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/>
+						</svg>
+					</span>
 					<button id="theme-toggle" class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Cambiar tema">
 						<span class="theme-thumb" aria-hidden="true"></span>
 					</button>
@@ -163,15 +168,15 @@ templ Page() {
 					</div>
 					<label for="moment-date">Fecha</label>
 					<input id="moment-date" name="date" class="written-date" type="text" inputmode="numeric" autocomplete="off" placeholder="DD / MM / AAAA" maxlength="10" data-calendar-max={ calendarEnd() } required/>
-					<label for="moment-description">Breve descripción</label>
-					<input
+					<label for="moment-description">Recuerdo</label>
+					<textarea
 						id="moment-description"
 						name="description"
-						type="text"
-						maxlength="80"
+						rows="5"
+						maxlength="1500"
 						placeholder="El comienzo de una nueva etapa"
 						required
-					/>
+					></textarea>
 					<label for="moment-image">Imagen <span>(opcional)</span></label>
 					<input id="moment-image" name="image" type="file" accept="image/*"/>
 					<button class="save-moment" type="submit" aria-label="Guardar">✓</button>

@@ -63,7 +63,7 @@ func Page() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\"><meta name=\"theme-color\" content=\"#f5f5f5\"><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\"><meta name=\"apple-mobile-web-app-title\" content=\"Mori\"><meta name=\"description\" content=\"Un calendario de nuestras vidas.\"><script>try{document.documentElement.dataset.theme=localStorage.getItem('memore-theme')||'light'}catch(e){}</script><title>Mori</title><link rel=\"icon\" href=\"./assets/icon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"./assets/mori-touch-icon-180.png\"><link rel=\"apple-touch-icon-precomposed\" sizes=\"180x180\" href=\"./assets/mori-touch-icon-180.png\"><link rel=\"manifest\" href=\"./assets/manifest.webmanifest\"><link rel=\"stylesheet\" href=\"./assets/app.css?v=22\"><script src=\"./assets/htmx.min.js\" defer></script><script src=\"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2\" defer></script><script src=\"./assets/app.js?v=21\" defer></script></head><body hx-boost=\"true\"><main class=\"memore\" aria-label=\"Calendario de vida de Gael y Juanmi\"><canvas id=\"life-lines\" aria-hidden=\"true\"></canvas><header class=\"header\"><div class=\"portraits\" aria-label=\"Juanmi y Gael\"><div class=\"portrait\" data-profile=\"january\"><button class=\"portrait-button\" type=\"button\" data-portrait=\"january\" aria-label=\"Editar retrato de Juanmi\"><img id=\"portrait-january\" data-birth-date=\"2005-01-15\" src=\"./assets/juanmi-2026.jpg\" alt=\"Retrato de Juanmi, 15 de enero de 2005\"></button> <button class=\"view-profile\" type=\"button\" data-view-profile=\"january\" aria-label=\"Ver el Mori de Juanmi\" hidden><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z\"></path><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z\"></path></svg></button></div><div class=\"portrait\" data-profile=\"may\"><button class=\"portrait-button\" type=\"button\" data-portrait=\"may\" aria-label=\"Editar retrato de Gael\"><img id=\"portrait-may\" data-birth-date=\"2005-05-26\" src=\"./assets/gael.jpeg\" alt=\"Retrato de Gael, 26 de mayo de 2005\"></button> <button class=\"view-profile\" type=\"button\" data-view-profile=\"may\" aria-label=\"Ver el Mori de Gael\" hidden><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z\"></path><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z\"></path></svg></button></div></div><h1>“Memento amare”</h1><button id=\"theme-toggle\" class=\"theme-toggle\" type=\"button\" role=\"switch\" aria-checked=\"false\" aria-label=\"Cambiar tema\"><span class=\"theme-thumb\" aria-hidden=\"true\"></span></button></header><div id=\"calendar-map\" class=\"calendar-map\"><div id=\"calendar-space\" class=\"calendar-space\"><section id=\"calendar-stage\" class=\"calendar\" aria-label=\"Calendario de 90 años\"><div class=\"calendar-head\"><span class=\"year-heading\">AÑO</span><div class=\"week-ruler\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\"><meta name=\"theme-color\" content=\"#f5f5f5\"><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\"><meta name=\"apple-mobile-web-app-title\" content=\"Mori\"><meta name=\"description\" content=\"Un calendario de nuestras vidas.\"><script>try{document.documentElement.dataset.theme=localStorage.getItem('memore-theme')||'light'}catch(e){}</script><title>Mori</title><link rel=\"icon\" href=\"./assets/icon.svg\" type=\"image/svg+xml\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"./assets/mori-touch-icon-180.png\"><link rel=\"apple-touch-icon-precomposed\" sizes=\"180x180\" href=\"./assets/mori-touch-icon-180.png\"><link rel=\"manifest\" href=\"./assets/manifest.webmanifest\"><link rel=\"stylesheet\" href=\"./assets/app.css?v=27\"><script src=\"./assets/htmx.min.js\" defer></script><script src=\"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2\" defer></script><script src=\"./assets/app.js?v=25\" defer></script></head><body hx-boost=\"true\"><main class=\"memore\" aria-label=\"Calendario de vida de Gael y Juanmi\"><canvas id=\"life-lines\" aria-hidden=\"true\"></canvas><header class=\"header\"><div class=\"portraits\" aria-label=\"Juanmi y Gael\"><div class=\"portrait\" data-profile=\"january\"><button class=\"portrait-button\" type=\"button\" data-portrait=\"january\" aria-label=\"Editar retrato de Juanmi\"><img id=\"portrait-january\" data-birth-date=\"2005-01-15\" src=\"./assets/juanmi-2026.jpg\" alt=\"Retrato de Juanmi, 15 de enero de 2005\"></button> <button class=\"view-profile\" type=\"button\" data-view-profile=\"january\" aria-label=\"Ver el Mori de Juanmi\" hidden><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z\"></path><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z\"></path></svg></button></div><div class=\"portrait\" data-profile=\"may\"><button class=\"portrait-button\" type=\"button\" data-portrait=\"may\" aria-label=\"Editar retrato de Gael\"><img id=\"portrait-may\" data-birth-date=\"2005-05-26\" src=\"./assets/gael.jpeg\" alt=\"Retrato de Gael, 26 de mayo de 2005\"></button> <button class=\"view-profile\" type=\"button\" data-view-profile=\"may\" aria-label=\"Ver el Mori de Gael\" hidden><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z\"></path><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z\"></path></svg></button></div></div><h1>Memento amare</h1><span class=\"theme-icon\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18\"></path></svg></span> <button id=\"theme-toggle\" class=\"theme-toggle\" type=\"button\" role=\"switch\" aria-checked=\"false\" aria-label=\"Cambiar tema\"><span class=\"theme-thumb\" aria-hidden=\"true\"></span></button></header><div id=\"calendar-map\" class=\"calendar-map\"><div id=\"calendar-space\" class=\"calendar-space\"><section id=\"calendar-stage\" class=\"calendar\" aria-label=\"Calendario de 90 años\"><div class=\"calendar-head\"><span class=\"year-heading\">AÑO</span><div class=\"week-ruler\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -75,7 +75,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--week:%d", week))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 94, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 99, Col: 72}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -88,7 +88,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(week))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 94, Col: 93}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 99, Col: 93}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -139,7 +139,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("--year:%d", year))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 108, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 113, Col: 72}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -152,7 +152,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(year))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 108, Col: 93}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 113, Col: 93}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -203,7 +203,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 120, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 125, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -216,7 +216,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(weekStart(index).Format("2006-01-02"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 121, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 126, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -229,7 +229,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(weekLabel(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 122, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 127, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -242,7 +242,7 @@ func Page() templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(weekLabel(index))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 123, Col: 38}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 128, Col: 38}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -260,20 +260,20 @@ func Page() templ.Component {
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 165, Col: 190}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 170, Col: 190}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" required> <label for=\"moment-description\">Breve descripción</label> <input id=\"moment-description\" name=\"description\" type=\"text\" maxlength=\"80\" placeholder=\"El comienzo de una nueva etapa\" required> <label for=\"moment-image\">Imagen <span>(opcional)</span></label> <input id=\"moment-image\" name=\"image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"portrait-dialog\" class=\"moment-dialog\"><form id=\"portrait-form\" method=\"dialog\" hx-boost=\"false\" novalidate><div class=\"dialog-heading\"><h2>Editar retrato</h2><button id=\"close-portrait-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"portrait-key\" type=\"hidden\"> <label for=\"portrait-date\">Fecha asociada</label> <input id=\"portrait-date\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" required> <label for=\"moment-description\">Recuerdo</label> <textarea id=\"moment-description\" name=\"description\" rows=\"5\" maxlength=\"1500\" placeholder=\"El comienzo de una nueva etapa\" required></textarea> <label for=\"moment-image\">Imagen <span>(opcional)</span></label> <input id=\"moment-image\" name=\"image\" type=\"file\" accept=\"image/*\"> <button class=\"save-moment\" type=\"submit\" aria-label=\"Guardar\">✓</button></form></dialog> <dialog id=\"portrait-dialog\" class=\"moment-dialog\"><form id=\"portrait-form\" method=\"dialog\" hx-boost=\"false\" novalidate><div class=\"dialog-heading\"><h2>Editar retrato</h2><button id=\"close-portrait-dialog\" type=\"button\" aria-label=\"Cerrar\">×</button></div><input id=\"portrait-key\" type=\"hidden\"> <label for=\"portrait-date\">Fecha asociada</label> <input id=\"portrait-date\" class=\"written-date\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" placeholder=\"DD / MM / AAAA\" maxlength=\"10\" data-calendar-max=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 189, Col: 180}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 194, Col: 180}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -286,7 +286,7 @@ func Page() templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 203, Col: 192}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 208, Col: 192}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -299,7 +299,7 @@ func Page() templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(calendarEnd())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 205, Col: 188}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/page.templ`, Line: 210, Col: 188}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {

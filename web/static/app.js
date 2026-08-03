@@ -52,6 +52,7 @@
   let pendingSeasonColor;
   let cloudUser;
   let cloudSaveTimer;
+  let portraitSyncChannel;
   let applyingCloudState = false;
   const cloudClient = globalThis.supabase?.createClient(supabaseURL, supabaseKey);
   const fields = {
@@ -129,6 +130,10 @@
       .on("postgres_changes", { event: "*", schema: "public", table: "memore_state", filter: `user_id=eq.${cloudUser.id}` },
         (change) => applyCloudState(change.new?.data))
       .subscribe();
+    portraitSyncChannel = cloudClient.channel(`mori-portraits-${cloudUser.id}`)
+      .on("broadcast", { event: "portrait-updated" }, () => loadPortraits())
+      .subscribe();
+    await loadPortraits();
   }
 
   async function initializeCloud() {
@@ -465,6 +470,38 @@
     database.close();
   }
 
+  function portraitMediaKey(key) {
+    return key === "january" ? "portrait-january-v2" : `portrait-${key}`;
+  }
+
+  function portraitCloudPath(key) {
+    return `${cloudUser.id}/portraits/${key}`;
+  }
+
+  async function readPortraitImage(key) {
+    if (cloudClient && cloudUser) {
+      const { data, error } = await cloudClient.storage.from("mori-media").download(portraitCloudPath(key));
+      if (!error && data) return data;
+    }
+    return readImage(portraitMediaKey(key));
+  }
+
+  async function uploadPortraitImage(key, image) {
+    if (!cloudClient || !cloudUser) throw new Error("Inicia sesión antes de cambiar el retrato");
+    const { error } = await cloudClient.storage.from("mori-media").upload(portraitCloudPath(key), image, {
+      upsert: true,
+      contentType: image.type || "image/jpeg",
+      cacheControl: "0",
+    });
+    if (error) throw error;
+    await storeImage(portraitMediaKey(key), image);
+    await portraitSyncChannel?.send({
+      type: "broadcast",
+      event: "portrait-updated",
+      payload: { key },
+    });
+  }
+
   async function loadPortraits() {
     const settings = readPortraitSettings();
     await Promise.all(["january", "may"].map(async (key) => {
@@ -474,8 +511,7 @@
       portrait.dataset.birthDate = value.date;
       portrait.alt = `Retrato asociado al ${value.date}`;
       try {
-        const imageKey = key === "january" ? "portrait-january-v2" : `portrait-${key}`;
-        const image = await readImage(imageKey);
+        const image = await readPortraitImage(key);
         if (!image) return;
         const previousURL = portraitImageURLs.get(key);
         if (previousURL) URL.revokeObjectURL(previousURL);
@@ -490,6 +526,7 @@
   }
 
   function openPortraitEditor(key) {
+    if (key !== deviceOwner || activeProfile !== deviceOwner) return;
     const portrait = document.querySelector(`#portrait-${key}`);
     if (!portrait) return;
     portraitKeyInput.value = key;
@@ -642,7 +679,7 @@
 
     grouped.forEach((moments, index) => {
       const cell = cells[index];
-      const summary = moments.map((moment) => `${moment.date} · ${moment.description}`).join("\n");
+      const summary = moments.map((moment) => `${moment.date} · ${compactExcerpt(moment.description)}`).join("\n");
       cell.classList.add("marked");
       cell.dataset.moments = summary;
       cell.dataset.momentId = moments[moments.length - 1].id;
@@ -650,6 +687,13 @@
       cell.setAttribute("aria-label", summary);
     });
     renderSeasonIndex();
+  }
+
+  function compactExcerpt(value, maximumWords = 9) {
+    const normalized = String(value || "").replace(/\s+/g, " ").trim();
+    const words = normalized.split(" ").filter(Boolean);
+    if (words.length <= maximumWords) return normalized;
+    return `${words.slice(0, maximumWords).join(" ")}…`;
   }
 
   async function showMoment(momentId) {
@@ -726,6 +770,26 @@
     });
   }
 
+  function playViewSound(viewingOther) {
+    audioContext ||= new AudioContext();
+    if (audioContext.state === "suspended") audioContext.resume();
+    const start = audioContext.currentTime;
+    const frequencies = viewingOther ? [210, 165] : [165, 210];
+    frequencies.forEach((frequency, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const time = start + index * 0.04;
+      oscillator.type = "triangle";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.exponentialRampToValueAtTime(0.018, time + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.075);
+      oscillator.connect(gain).connect(audioContext.destination);
+      oscillator.start(time);
+      oscillator.stop(time + 0.08);
+    });
+  }
+
   let pointerStart;
 
   function cellAtPoint(x, y) {
@@ -791,7 +855,9 @@
   portraits.addEventListener("click", (event) => {
     const viewButton = event.target.closest(".view-profile");
     if (viewButton) {
-      switchProfile(viewButton.dataset.viewProfile);
+      const targetProfile = viewButton.dataset.viewProfile;
+      switchProfile(targetProfile);
+      playViewSound(targetProfile !== deviceOwner);
       return;
     }
     const portraitButton = event.target.closest(".portrait-button");
@@ -869,7 +935,7 @@
     renderMoments();
     dialog.close();
 
-    note.textContent = `${date} · ${description}`;
+    note.textContent = `${date} · ${compactExcerpt(description)}`;
     note.hidden = false;
   });
 
@@ -922,10 +988,15 @@
     const key = portraitKeyInput.value;
     const date = requireWrittenDate(portraitDateInput);
     const image = portraitImageInput.files[0];
-    if (!key || !date || date > todayString()) return;
+    if (!key || key !== deviceOwner || !date || date > todayString()) return;
     if (image) {
-      const imageKey = key === "january" ? "portrait-january-v2" : `portrait-${key}`;
-      await storeImage(imageKey, image);
+      try {
+        await uploadPortraitImage(key, image);
+      } catch {
+        note.textContent = "No se pudo sincronizar el retrato. Comprueba Supabase Storage.";
+        note.hidden = false;
+        return;
+      }
     }
 
     const settings = readPortraitSettings();
